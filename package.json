@@ -9,6 +9,17 @@
   "scripts": {
     "test": "node --test"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/citron03/Codex-Arsenal.git"
+  },
+  "bugs": {
+    "url": "https://github.com/citron03/Codex-Arsenal/issues"
+  },
+  "homepage": "https://github.com/citron03/Codex-Arsenal#readme",
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "bin/",
     "lib/",
