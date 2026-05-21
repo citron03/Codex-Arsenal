@@ -1,6 +1,6 @@
 {
   "name": "codex-arsenal",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A practical arsenal of Codex and Claude Code plugins, skills, prompts, workflows, and configs.",
   "type": "module",
   "bin": {
