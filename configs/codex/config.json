@@ -1,0 +1,6 @@
+{
+  "defaultModel": "gpt-5-codex",
+  "approvalMode": "on-request",
+  "sandboxMode": "workspace-write",
+  "notes": "Starter Codex configuration. Adjust model and approvals per project."
+}

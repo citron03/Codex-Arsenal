@@ -1,0 +1,6 @@
+{
+  "name": "context-window-compressor",
+  "version": "0.1.0",
+  "description": "Summarizes long agent context into a concise continuation note.",
+  "entry": "README.md"
+}

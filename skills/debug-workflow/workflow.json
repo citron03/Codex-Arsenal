@@ -1,0 +1,11 @@
+{
+  "name": "debug-workflow",
+  "version": "0.1.0",
+  "steps": [
+    "reproduce",
+    "inspect",
+    "write-regression-test",
+    "fix",
+    "verify"
+  ]
+}
