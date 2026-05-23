@@ -1,9 +1,14 @@
 import { access } from "node:fs/promises";
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { MANIFEST } from "../lib/manifest.js";
+import { BASE_URL, MANIFEST, REPO } from "../lib/manifest.js";
 
 describe("manifest", () => {
+  it("uses the real GitHub repository for published package fetches", () => {
+    assert.equal(REPO, "citron03/Codex-Arsenal");
+    assert.equal(BASE_URL, "https://raw.githubusercontent.com/citron03/Codex-Arsenal/main");
+  });
+
   it("provides the top-level repository sections promised by the README", async () => {
     for (const directory of [
       "plugins",
