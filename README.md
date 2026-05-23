@@ -1,8 +1,8 @@
 # Codex-Arsenal
 
-Practical building blocks for working with OpenAI Codex, Claude Code, and other coding agents.
+Practical building blocks for working with OpenAI Codex.
 
-Codex-Arsenal is not an awesome list. It is a small, installable collection of agent guidelines, skills, prompts, workflows, configs, and plugin sketches that can be copied into real projects.
+Codex-Arsenal is not an awesome list. It is a small, installable collection of Codex guidelines, skills, prompts, workflows, configs, and plugin sketches that can be copied into real projects.
 
 ## Install
 
@@ -39,14 +39,15 @@ npm exec --yes --package=codex-arsenal -- codex-arsenal list
 ## CLI
 
 ```bash
-codex-arsenal init [--yes] [--dir <path>]
+codex-arsenal init [--yes] [--force] [--dir <path>]
 codex-arsenal list
-codex-arsenal get <id...> [--dir <path>]
+codex-arsenal get <id...> [--force] [--dir <path>]
 ```
 
 - `init` opens a small selector. With `--yes`, it installs default items without prompting.
 - `list` prints all installable manifest entries grouped by category.
 - `get` installs one or more manifest entries by id.
+- Existing files are skipped by default. Add `--force` to overwrite them intentionally.
 
 The package is published on npm as [`codex-arsenal`](https://www.npmjs.com/package/codex-arsenal).
 
@@ -57,7 +58,6 @@ The package is published on npm as [`codex-arsenal`](https://www.npmjs.com/packa
 | ID | Installs | Purpose |
 | --- | --- | --- |
 | `codex-md` | `CODEX.md` | Project-local behavioral guardrails for Codex-style agents. |
-| `claude-md` | `CLAUDE.md` | Project-local behavioral guardrails for Claude Code. |
 
 ### Configs
 
@@ -152,6 +152,19 @@ git push --follow-tags
 ```
 
 The publish workflow runs on `v*` tags and publishes with OIDC, so it does not require a long-lived `NPM_TOKEN`.
+
+## Codex Plugin Distribution
+
+The npm package is the current public distribution channel. Codex plugin library publishing is separate from npm and currently does not expose a general public submission flow in the public docs.
+
+For now, use one of these paths:
+
+- publish reusable files through `codex-arsenal` on npm;
+- keep plugin sketches under `plugins/`;
+- create a local or team marketplace file at `.agents/plugins/marketplace.json` when you want Codex app users to install a repo plugin from a local marketplace;
+- track OpenAI's Codex plugin documentation for an official public marketplace submission path.
+
+See `docs/codex-plugin-distribution.md` for the current assessment.
 
 ## Contribution Guidelines
 

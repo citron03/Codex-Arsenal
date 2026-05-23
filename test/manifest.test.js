@@ -36,6 +36,13 @@ describe("manifest", () => {
     ]);
   });
 
+  it("focuses installable behavior guidance on Codex", () => {
+    const behaviorItems = MANIFEST.filter((item) => item.category === "Behavior Guidelines");
+
+    assert.deepEqual(behaviorItems.map((item) => item.id), ["codex-md"]);
+    assert.deepEqual(behaviorItems.flatMap((item) => item.files.map((file) => file.src)), ["CODEX.md"]);
+  });
+
   it("points every file entry at an existing repository file", async () => {
     for (const item of MANIFEST) {
       assert.ok(item.id, "item id is required");

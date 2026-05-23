@@ -1,7 +1,7 @@
 {
   "name": "codex-arsenal",
   "version": "0.2.1",
-  "description": "A practical arsenal of Codex and Claude Code plugins, skills, prompts, workflows, and configs.",
+  "description": "A practical arsenal of Codex plugins, skills, prompts, workflows, and configs.",
   "type": "module",
   "bin": {
     "codex-arsenal": "bin/cli.js"
@@ -22,9 +22,10 @@
   },
   "files": [
     "bin/",
+    "docs/codex-plugin-distribution.md",
+    "docs/npm-publishing.md",
     "lib/",
     "CODEX.md",
-    "CLAUDE.md",
     "configs/",
     "plugins/",
     "prompts/",
@@ -36,7 +37,6 @@
   },
   "keywords": [
     "codex",
-    "claude-code",
     "ai-agent",
     "developer-tools",
     "prompt-engineering"

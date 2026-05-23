@@ -91,7 +91,20 @@ Weak criteria ("make it work") require constant clarification.
 
 ---
 
-## 6. Context Awareness
+## 6. Token Budgeting
+
+**Spend context only where it changes the decision.**
+
+- Start with filenames, symbols, and short snippets before reading full files.
+- Prefer `rg` and targeted search over broad recursive reads.
+- Summarize long outputs immediately: key facts, file paths, line numbers, open questions.
+- Do not paste large logs back to the user. Quote only the failing line or smallest useful excerpt.
+- Reuse already-loaded context instead of re-reading the same files.
+- When handing off, compress to: goal, changed files, commands run, verification status, next risk.
+
+---
+
+## 7. Context Awareness
 
 **Codex has a limited context window — use it wisely.**
 
@@ -102,7 +115,7 @@ Weak criteria ("make it work") require constant clarification.
 
 ---
 
-## 7. Tool Use Discipline
+## 8. Tool Use Discipline
 
 **Every tool call has a cost. Make them count.**
 

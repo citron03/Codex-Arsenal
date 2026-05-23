@@ -6,9 +6,11 @@ function printHelp() {
   console.log(`codex-arsenal
 
 Usage:
-  codex-arsenal init [--yes] [--dir <path>]
+  codex-arsenal init [--yes] [--force] [--dir <path>]
   codex-arsenal list
-  codex-arsenal get <id...> [--dir <path>]
+  codex-arsenal get <id...> [--force] [--dir <path>]
+
+By default, existing files are skipped. Use --force to overwrite them.
 `);
 }
 
@@ -28,7 +30,7 @@ function nonOptionArgs(args) {
       index += 1;
       continue;
     }
-    if (arg === "--yes" || arg === "-y") {
+    if (arg === "--yes" || arg === "-y" || arg === "--force") {
       continue;
     }
     result.push(arg);
@@ -51,6 +53,7 @@ function printList() {
 async function main(argv) {
   const [command = "init", ...args] = argv;
   const dir = readOption(args, "--dir", readOption(args, "-d", process.cwd()));
+  const force = args.includes("--force");
 
   if (command === "help" || command === "--help" || command === "-h") {
     printHelp();
@@ -67,12 +70,12 @@ async function main(argv) {
     if (!ids.length) {
       throw new Error("get requires at least one item id");
     }
-    await runInit({ preSelected: findManifestItems(ids), skipPrompt: true, dir });
+    await runInit({ preSelected: findManifestItems(ids), skipPrompt: true, dir, force });
     return;
   }
 
   if (command === "init") {
-    await runInit({ yes: args.includes("--yes") || args.includes("-y"), dir });
+    await runInit({ yes: args.includes("--yes") || args.includes("-y"), dir, force });
     return;
   }
 
