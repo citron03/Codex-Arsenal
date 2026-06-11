@@ -7,6 +7,10 @@
     "cliCommand": "obsidian",
     "vaultPath": "~/Obsidian/Codex",
     "inboxPath": "Inbox/Codex",
+    "launch": {
+      "open": null,
+      "reveal": null
+    },
     "noteTargets": {
       "sessionInitializer": "Codex/Session-Initializer.md",
       "codeStyle": "Codex/Code-Style.md",

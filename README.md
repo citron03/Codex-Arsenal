@@ -118,8 +118,12 @@ Example commands:
 
 ```bash
 codex-obsidian-bridge sync --dir .
+codex-obsidian-bridge open --dir . --file "Codex/Session-Initializer.md"
+codex-obsidian-bridge reveal --dir . --file "Inbox/Codex/2026-06-11-refined-session-bootstrap.md"
 codex-obsidian-bridge draft --dir . --title "Refined session bootstrap" --summary "Added an Obsidian bridge and session-level startup guidance." --changes "added bridge CLI, added note templates" --decisions "kept config file-based" --verification "npm test" --signals "new integration boundary, README update"
 ```
+
+If you have an Obsidian CLI or local launcher, add `obsidian.launch.open` and `obsidian.launch.reveal` templates to `.codex/session-config.json`. The bridge will use those templates first and fall back to an `obsidian://` launch URI if no CLI template is configured.
 
 ### Workflows
 

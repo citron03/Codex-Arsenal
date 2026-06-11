@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import {
+  openObsidianNote,
   draftObsidianArticle,
   loadSessionConfig,
   syncObsidianNotes
@@ -10,11 +11,14 @@ function printHelp() {
 
 Usage:
   codex-obsidian-bridge sync [--dir <path>] [--force]
+  codex-obsidian-bridge open [--dir <path>] [--file <path>]
+  codex-obsidian-bridge reveal [--dir <path>] [--file <path>]
   codex-obsidian-bridge draft --title <text> --summary <text> [options]
 
 Options:
   --dir <path>             Project root that contains .codex/session-config.json
   --force                  Overwrite existing Obsidian notes
+  --file <path>            Vault-relative note path to open or reveal
   --title <text>           Article title
   --summary <text>         Short summary of why the work mattered
   --changes <items>        Comma-separated list of change bullets
@@ -63,6 +67,23 @@ async function main(argv) {
       console.log(`skipped ${file} (already exists; use --force to overwrite)`);
     }
     console.log(`target vault: ${result.targetVault}`);
+    return;
+  }
+
+  if (command === "open" || command === "reveal") {
+    const result = await openObsidianNote({
+      cwd,
+      config,
+      filePath: readOption(args, "--file"),
+      mode: command
+    });
+
+    if (!result.launched) {
+      console.log("Obsidian is disabled for this project.");
+      return;
+    }
+
+    console.log(result.mode === "command" ? "launched configured Obsidian command" : `opened ${result.spec.uri}`);
     return;
   }
 

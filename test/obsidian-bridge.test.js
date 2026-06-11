@@ -6,6 +6,8 @@ import assert from "node:assert/strict";
 import {
   buildArticleMarkdown,
   draftObsidianArticle,
+  openObsidianNote,
+  resolveObsidianLaunchSpec,
   shouldDraftArticle,
   syncObsidianNotes
 } from "../lib/obsidian-bridge.js";
@@ -99,5 +101,79 @@ describe("obsidian bridge", () => {
     } finally {
       await rm(vaultRoot, { recursive: true, force: true });
     }
+  });
+
+  it("builds a launch uri when no Obsidian CLI template is configured", () => {
+    const spec = resolveObsidianLaunchSpec({
+      cwd: "/workspace",
+      config: {
+        obsidian: {
+          enabled: true,
+          vaultPath: "~/Obsidian/Codex"
+        }
+      },
+      filePath: "Codex/Session-Initializer.md"
+    });
+
+    assert.equal(spec.type, "uri");
+    assert.match(spec.uri, /^obsidian:\/\/open\?vault=Codex&file=/);
+  });
+
+  it("uses a configured Obsidian launch template when available", () => {
+    const spec = resolveObsidianLaunchSpec({
+      cwd: "/workspace",
+      config: {
+        obsidian: {
+          enabled: true,
+          vaultPath: "/vault/Codex",
+          launch: {
+            open: {
+              command: "obsidian",
+              args: ["open", "{file}", "--vault", "{vault}", "--mode", "{mode}"]
+            }
+          }
+        }
+      },
+      filePath: "Codex/Session-Initializer.md",
+      mode: "open"
+    });
+
+    assert.equal(spec.type, "command");
+    assert.equal(spec.command, "obsidian");
+    assert.deepEqual(spec.args, [
+      "open",
+      "Codex/Session-Initializer.md",
+      "--vault",
+      "Codex",
+      "--mode",
+      "open"
+    ]);
+  });
+
+  it("launches a configured note using an injected runner", async () => {
+    const calls = [];
+    const result = await openObsidianNote({
+      cwd: "/workspace",
+      config: {
+        obsidian: {
+          enabled: true,
+          vaultPath: "/vault/Codex",
+          launch: {
+            open: {
+              command: "obsidian",
+              args: ["open", "{file}"]
+            }
+          }
+        }
+      },
+      filePath: "Codex/Session-Initializer.md",
+      runner: async (command, args) => {
+        calls.push({ command, args });
+      }
+    });
+
+    assert.equal(result.launched, true);
+    assert.equal(calls[0].command, "obsidian");
+    assert.deepEqual(calls[0].args, ["open", "Codex/Session-Initializer.md"]);
   });
 });

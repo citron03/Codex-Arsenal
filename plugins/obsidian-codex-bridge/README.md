@@ -25,4 +25,6 @@ If an `obsidian` command is available, the bridge can use it to open the vault, 
 
 ## Practical CLI
 
-The repository now ships a small `codex-obsidian-bridge` command that can sync the notes and draft an article into the configured inbox.
+The repository now ships a small `codex-obsidian-bridge` command that can sync the notes, open or reveal a note, and draft an article into the configured inbox.
+
+If a project has an Obsidian CLI, configure `obsidian.launch.open` and `obsidian.launch.reveal` in `.codex/session-config.json`. Otherwise the bridge falls back to an `obsidian://` URI launch.
