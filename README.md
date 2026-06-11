@@ -87,6 +87,7 @@ The package is published on npm as [`codex-arsenal`](https://www.npmjs.com/packa
 | `skill-debug-workflow` | `skills/debug-workflow/` | Reproduce, diagnose, test, and fix bugs systematically. |
 | `skill-test-gen` | `skills/test-gen/` | Generate focused tests from behavior notes and function signatures. |
 | `skill-publishing-npm-packages` | `skills/publishing-npm-packages/SKILL.md` | Prepare, troubleshoot, and automate npm releases with Trusted Publishing. |
+| `skill-obsidian-session-loop` | `skills/obsidian-session-loop/SKILL.md` | Session startup, Obsidian sync, and end-of-session article drafting. |
 
 ### Plugins
 

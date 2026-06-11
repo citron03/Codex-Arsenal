@@ -43,6 +43,7 @@ describe("manifest", () => {
     assert.ok(ids.has("prompt-session-bootstrap"));
     assert.ok(ids.has("prompt-code-style"));
     assert.ok(ids.has("prompt-meaningful-work"));
+    assert.ok(ids.has("skill-obsidian-session-loop"));
     assert.ok(ids.has("plugin-obsidian-codex-bridge"));
   });
 
