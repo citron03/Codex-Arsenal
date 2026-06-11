@@ -1,0 +1,26 @@
+{
+  "sessionInitializer": "prompts/session-bootstrap.md",
+  "codeStyleNote": "prompts/code-style.md",
+  "meaningfulWorkNote": "prompts/meaningful-work.md",
+  "obsidian": {
+    "enabled": true,
+    "cliCommand": "obsidian",
+    "vaultPath": "~/Obsidian/Codex",
+    "inboxPath": "Inbox/Codex",
+    "noteTargets": {
+      "sessionInitializer": "Codex/Session-Initializer.md",
+      "codeStyle": "Codex/Code-Style.md",
+      "meaningfulWork": "Codex/Meaningful-Work.md"
+    }
+  },
+  "articleRules": {
+    "highSignalTriggers": [
+      "new or changed installable content",
+      "behavioral change",
+      "external integration",
+      "substantive README or workflow update"
+    ],
+    "minimumSignalsForDraft": 2,
+    "requiresVerification": true
+  }
+}

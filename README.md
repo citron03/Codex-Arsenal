@@ -42,12 +42,16 @@ npm exec --yes --package=codex-arsenal -- codex-arsenal list
 codex-arsenal init [--yes] [--force] [--dir <path>]
 codex-arsenal list
 codex-arsenal get <id...> [--force] [--dir <path>]
+codex-obsidian-bridge sync [--dir <path>] [--force]
+codex-obsidian-bridge draft --title <text> --summary <text> [options]
 ```
 
 - `init` opens a small selector. With `--yes`, it installs default items without prompting.
 - `list` prints all installable manifest entries grouped by category.
 - `get` installs one or more manifest entries by id.
 - Existing files are skipped by default. Add `--force` to overwrite them intentionally.
+- `codex-obsidian-bridge sync` mirrors the session bootstrap, code style, and meaningful-work notes into an Obsidian vault.
+- `codex-obsidian-bridge draft` writes an article draft into the configured Obsidian inbox when the meaningful-work threshold is met.
 
 The package is published on npm as [`codex-arsenal`](https://www.npmjs.com/package/codex-arsenal).
 
@@ -64,12 +68,16 @@ The package is published on npm as [`codex-arsenal`](https://www.npmjs.com/packa
 | ID | Installs | Purpose |
 | --- | --- | --- |
 | `config-codex` | `.codex/config.json` | Starter Codex config. |
+| `config-session-bootstrap` | `.codex/session-config.json` | Session bootstrap and Obsidian bridge settings. |
 | `config-vscode` | `.vscode/settings.json` | VS Code settings for agent-assisted development. |
 
 ### Prompts
 
 | ID | Installs | Purpose |
 | --- | --- | --- |
+| `prompt-session-bootstrap` | `prompts/session-bootstrap.md` | Session startup instructions for Codex. |
+| `prompt-code-style` | `prompts/code-style.md` | Obsidian-backed code style note template. |
+| `prompt-meaningful-work` | `prompts/meaningful-work.md` | Criteria and template for end-of-session articles. |
 | `prompt-solo-dev` | `prompts/system-prompts/solo-dev.md` | Solo developer system prompt template. |
 
 ### Skills
@@ -85,6 +93,32 @@ The package is published on npm as [`codex-arsenal`](https://www.npmjs.com/packa
 | ID | Installs | Purpose |
 | --- | --- | --- |
 | `plugin-context-window-compressor` | `plugins/context-window-compressor/` | Plugin sketch for compressing long agent context into concise handoff notes. |
+| `plugin-obsidian-codex-bridge` | `plugins/obsidian-codex-bridge/` | Plugin sketch for syncing Codex notes and article drafts with Obsidian. |
+
+## Obsidian Bridge
+
+The bridge is designed around two repeatable actions:
+
+1. `sync` the session initializer and style notes into a vault so the notes stay close to where they are read.
+2. `draft` a session article when the configured meaningful-work criteria are met.
+
+The default config lives in `.codex/session-config.json` and can be customized per project. A minimal vault layout looks like this:
+
+```text
+Codex/
+  Session-Initializer.md
+  Code-Style.md
+  Meaningful-Work.md
+Inbox/
+  Codex/
+```
+
+Example commands:
+
+```bash
+codex-obsidian-bridge sync --dir .
+codex-obsidian-bridge draft --dir . --title "Refined session bootstrap" --summary "Added an Obsidian bridge and session-level startup guidance." --changes "added bridge CLI, added note templates" --decisions "kept config file-based" --verification "npm test" --signals "new integration boundary, README update"
+```
 
 ### Workflows
 
@@ -100,7 +134,7 @@ codex-arsenal/
   lib/                  manifest, installer, and fetcher
   configs/              reusable editor and agent configs
   plugins/              plugin sketches
-  prompts/              system prompt templates
+  prompts/              system prompt templates and session notes
   skills/               reusable agent skills
   workflows/            repeatable agentic workflows
   references/           curated references and notes

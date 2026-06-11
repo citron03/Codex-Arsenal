@@ -4,7 +4,8 @@
   "description": "A practical arsenal of Codex plugins, skills, prompts, workflows, and configs.",
   "type": "module",
   "bin": {
-    "codex-arsenal": "bin/cli.js"
+    "codex-arsenal": "bin/cli.js",
+    "codex-obsidian-bridge": "bin/obsidian-bridge.js"
   },
   "scripts": {
     "test": "node --test"

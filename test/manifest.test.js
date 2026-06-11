@@ -36,6 +36,16 @@ describe("manifest", () => {
     ]);
   });
 
+  it("includes the session bootstrap and Obsidian bridge manifests", () => {
+    const ids = new Set(MANIFEST.map((item) => item.id));
+
+    assert.ok(ids.has("config-session-bootstrap"));
+    assert.ok(ids.has("prompt-session-bootstrap"));
+    assert.ok(ids.has("prompt-code-style"));
+    assert.ok(ids.has("prompt-meaningful-work"));
+    assert.ok(ids.has("plugin-obsidian-codex-bridge"));
+  });
+
   it("focuses installable behavior guidance on Codex", () => {
     const behaviorItems = MANIFEST.filter((item) => item.category === "Behavior Guidelines");
 

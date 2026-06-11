@@ -1,0 +1,6 @@
+{
+  "name": "obsidian-codex-bridge",
+  "version": "0.1.0",
+  "description": "Sketch for connecting Codex session notes and article drafts to Obsidian.",
+  "entry": "README.md"
+}

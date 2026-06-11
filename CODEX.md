@@ -6,6 +6,23 @@
 
 ---
 
+## Session Bootstrap
+
+When this repository is installed into a project, read `prompts/session-bootstrap.md` immediately after `CODEX.md` if it exists.
+
+If `configs/codex/session-config.json` exists, use it as the project-local source of truth for:
+
+- the session initializer path;
+- the code-style note path;
+- the meaningful-work criteria;
+- the Obsidian vault and inbox paths.
+
+If the configured code-style note exists, merge it into your working style before editing files.
+
+If the task satisfies the meaningful-work criteria, draft an Obsidian article at the end of the session.
+
+---
+
 ## 1. Think Before Coding
 
 **Don't assume. Don't hide confusion. Surface tradeoffs.**
