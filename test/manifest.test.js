@@ -47,6 +47,17 @@ describe("manifest", () => {
     assert.ok(ids.has("plugin-obsidian-codex-bridge"));
   });
 
+  it("includes the Hermes Tweet operator skill manifest", async () => {
+    const item = MANIFEST.find((entry) => entry.id === "skill-hermes-tweet");
+
+    assert.equal(item.category, "Skills");
+    assert.equal(item.label, "hermes-tweet");
+    assert.deepEqual(item.files, [
+      { src: "skills/hermes-tweet/SKILL.md", dest: "skills/hermes-tweet/SKILL.md" }
+    ]);
+    await access("skills/hermes-tweet/SKILL.md");
+  });
+
   it("focuses installable behavior guidance on Codex", () => {
     const behaviorItems = MANIFEST.filter((item) => item.category === "Behavior Guidelines");
 

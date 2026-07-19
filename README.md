@@ -33,7 +33,7 @@ npx codex-arsenal get codex-md --dir ./my-project
 On Windows or when running from a package directory with the same name, this form is the most reliable:
 
 ```bash
-npm exec --yes --package=codex-arsenal -- codex-arsenal list
+npm exec --yes --package=codex-arsenal@latest --call="codex-arsenal list"
 ```
 
 ## CLI
@@ -88,6 +88,7 @@ The package is published on npm as [`codex-arsenal`](https://www.npmjs.com/packa
 | `skill-test-gen` | `skills/test-gen/` | Generate focused tests from behavior notes and function signatures. |
 | `skill-publishing-npm-packages` | `skills/publishing-npm-packages/SKILL.md` | Prepare, troubleshoot, and automate npm releases with Trusted Publishing. |
 | `skill-obsidian-session-loop` | `skills/obsidian-session-loop/SKILL.md` | Session startup, Obsidian sync, and end-of-session article drafting. |
+| `skill-hermes-tweet` | `skills/hermes-tweet/SKILL.md` | Install, configure, and safely operate the Hermes Tweet plugin. |
 
 ### Plugins
 

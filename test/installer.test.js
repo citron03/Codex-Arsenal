@@ -117,4 +117,25 @@ describe("installer", () => {
       await rm(targetDir, { recursive: true, force: true });
     }
   });
+
+  it("rejects manifest destinations outside the target directory", async () => {
+    const rootDir = await mkdtemp(join(tmpdir(), "codex-arsenal-boundary-"));
+    const targetDir = join(rootDir, "target");
+    const outsideFile = join(rootDir, "escape.txt");
+
+    try {
+      const result = await installItems(
+        [{ id: "unsafe-item", files: [{ src: "source.txt", dest: "../escape.txt" }] }],
+        targetDir,
+        { readSourceFile: async () => "unsafe content" }
+      );
+
+      assert.equal(result.installed, 0);
+      assert.equal(result.failed, 1);
+      assert.match(result.failures[0].error, /escapes target directory/);
+      await assert.rejects(readFile(outsideFile, "utf8"), { code: "ENOENT" });
+    } finally {
+      await rm(rootDir, { recursive: true, force: true });
+    }
+  });
 });
