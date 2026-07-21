@@ -27,6 +27,7 @@ describe("manifest", () => {
     const categories = new Set(MANIFEST.map((item) => item.category));
 
     assert.deepEqual([...categories].sort(), [
+      "Add-ons",
       "Behavior Guidelines",
       "Configs",
       "Plugins",
@@ -45,6 +46,14 @@ describe("manifest", () => {
     assert.ok(ids.has("prompt-meaningful-work"));
     assert.ok(ids.has("skill-obsidian-session-loop"));
     assert.ok(ids.has("plugin-obsidian-codex-bridge"));
+    assert.ok(ids.has("option-obsidian-session-loop"));
+  });
+
+  it("offers optional planning counterargument and token-efficient execution skills", () => {
+    const ids = new Set(MANIFEST.map((item) => item.id));
+
+    assert.ok(ids.has("option-plan-counterargument"));
+    assert.ok(ids.has("option-token-efficient-execution"));
   });
 
   it("focuses installable behavior guidance on Codex", () => {

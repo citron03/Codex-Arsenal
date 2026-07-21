@@ -24,6 +24,14 @@ Install specific items:
 npx codex-arsenal get codex-md skill-publishing-npm-packages
 ```
 
+Install optional planning, token-efficiency, or Obsidian support:
+
+```bash
+npx codex-arsenal get option-plan-counterargument
+npx codex-arsenal get option-token-efficient-execution
+npx codex-arsenal get option-obsidian-session-loop
+```
+
 Install into another directory:
 
 ```bash
@@ -70,6 +78,16 @@ The package is published on npm as [`codex-arsenal`](https://www.npmjs.com/packa
 | `config-codex` | `.codex/config.json` | Starter Codex config. |
 | `config-session-bootstrap` | `.codex/session-config.json` | Session bootstrap and Obsidian bridge settings. |
 | `config-vscode` | `.vscode/settings.json` | VS Code settings for agent-assisted development. |
+
+### Add-ons
+
+These are opt-in: `init --yes` installs only the default `codex-md` guidance. Select an add-on in the interactive `init` prompt or pass its ID to `get`.
+
+| ID | Installs | Purpose |
+| --- | --- | --- |
+| `option-plan-counterargument` | `skills/plan-counterargument/SKILL.md` | Challenge a proposed plan and revise it when the evidence falsifies it. |
+| `option-token-efficient-execution` | `skills/token-efficient-execution/SKILL.md` | Conserve context and tool-output budget without skipping verification. |
+| `option-obsidian-session-loop` | Obsidian config, prompts, skill, and bridge sketch | Add session-note sync and meaningful-work article drafting in Obsidian. |
 
 ### Prompts
 

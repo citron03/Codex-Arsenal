@@ -6,23 +6,6 @@
 
 ---
 
-## Session Bootstrap
-
-When this repository is installed into a project, read `prompts/session-bootstrap.md` immediately after `CODEX.md` if it exists.
-
-If `configs/codex/session-config.json` exists, use it as the project-local source of truth for:
-
-- the session initializer path;
-- the code-style note path;
-- the meaningful-work criteria;
-- the Obsidian vault and inbox paths.
-
-If the configured code-style note exists, merge it into your working style before editing files.
-
-If the task satisfies the meaningful-work criteria, draft an Obsidian article at the end of the session.
-
----
-
 ## 1. Think Before Coding
 
 **Don't assume. Don't hide confusion. Surface tradeoffs.**
@@ -86,9 +69,9 @@ Transform tasks into verifiable goals:
 For multi-step tasks, state a brief plan:
 
 ```
-1. [Step] → verify: [check]
-2. [Step] → verify: [check]
-3. [Step] → verify: [check]
+1. [Step] -> verify: [check]
+2. [Step] -> verify: [check]
+3. [Step] -> verify: [check]
 ```
 
 Strong success criteria let you loop independently.  
@@ -108,31 +91,7 @@ Weak criteria ("make it work") require constant clarification.
 
 ---
 
-## 6. Token Budgeting
-
-**Spend context only where it changes the decision.**
-
-- Start with filenames, symbols, and short snippets before reading full files.
-- Prefer `rg` and targeted search over broad recursive reads.
-- Summarize long outputs immediately: key facts, file paths, line numbers, open questions.
-- Do not paste large logs back to the user. Quote only the failing line or smallest useful excerpt.
-- Reuse already-loaded context instead of re-reading the same files.
-- When handing off, compress to: goal, changed files, commands run, verification status, next risk.
-
----
-
-## 7. Context Awareness
-
-**Codex has a limited context window — use it wisely.**
-
-- Don't re-read files you've already loaded. Reference prior output instead.
-- When summarizing large codebases, compress systematically: directory tree → key files → function signatures.
-- If context is filling up, state it: *"I'm approaching context limits. Summarizing and continuing."*
-- Prefer targeted grep/search over reading entire files when looking for a specific symbol.
-
----
-
-## 8. Tool Use Discipline
+## 6. Tool Use Discipline
 
 **Every tool call has a cost. Make them count.**
 
@@ -143,7 +102,7 @@ Weak criteria ("make it work") require constant clarification.
 
 ---
 
-## ✅ These guidelines are working if:
+## These guidelines are working if:
 
 - Diffs contain fewer unnecessary changes
 - Fewer rewrites due to overcomplication
