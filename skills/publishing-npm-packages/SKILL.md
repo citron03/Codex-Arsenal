@@ -267,7 +267,7 @@ Confirm the output names the expected last tag before trusting the computed vers
 4. Commit with the Conventional Commits type that matches the intended version.
 5. Push to the release branch: `git push`.
 6. Check the release job, including the case where it correctly publishes nothing.
-7. Smoke test after publish: `npx --prefer-online <package-name> --help`. See Post-Publish Verification before treating a stale version as a failure.
+7. Wait for the registry, then smoke test: `npx <package-name>@<version> --help`. See Post-Publish Verification; a stale version before the wait is not a failed publish.
 
 ### Manual
 
@@ -277,27 +277,35 @@ Confirm the output names the expected last tag before trusting the computed vers
 4. Bump version: `npm version patch`, `minor`, or `major`.
 5. Push commit and tag: `git push --follow-tags`.
 6. Check GitHub Actions publish job.
-7. Smoke test after publish: `npx --prefer-online <package-name> --help`. See Post-Publish Verification before treating a stale version as a failure.
+7. Wait for the registry, then smoke test: `npx <package-name>@<version> --help`. See Post-Publish Verification; a stale version before the wait is not a failed publish.
 
 ## Post-Publish Verification
 
-A successful publish is not immediately visible. npm prints "Your package is being processed and may take a few minutes to become available", and a publish that signs provenance takes longer still. Two different caches sit between the publish and a passing smoke test, so check them in order.
+A successful publish is not immediately visible. npm prints "Your package is being processed and may take a few minutes to become available", and a publish that signs provenance takes longer still. Observed propagation for a small package with provenance: 75s and 162s on two releases of the same package.
 
-Registry metadata, which updates first:
+Treat the publish as successful when the job log shows `+ <package-name>@<version>`. Everything after that is propagation, and the response to propagation is to wait, never to publish again.
+
+Wait for the registry before touching npm tooling:
 
 ```bash
-curl -s https://registry.npmjs.org/<package-name> | grep -o '"latest":"[^"]*"'
+until curl -s https://registry.npmjs.org/<package-name> | grep -q '"latest":"<version>"'; do sleep 10; done
 ```
 
-Then the smoke test, bypassing the local npm cache:
+Then smoke test:
+
+```bash
+npx <package-name>@<version> --help
+```
+
+The order matters, and not because there are two independent delays to sit through. There is one delay, in the registry. Running `npm view` or `npx` during that window makes a second problem: the client caches the packument it just fetched, which does not contain the new version, and keeps serving it after the registry is correct. That cached packument is what produces `ETARGET No matching version found` for a version that is demonstrably live.
+
+So `--prefer-online` is the recovery, not the routine:
 
 ```bash
 npx --prefer-online <package-name>@<version> --help
 ```
 
-`npm view` and a plain `npx` both read a locally cached packument, so they can report the previous version for a while after the registry itself is correct. Neither is evidence that the publish failed.
-
-Treat the publish as successful when the job log shows `+ <package-name>@<version>`. Everything after that is propagation, and the response to propagation is to wait, never to publish again.
+If the wait comes first, a plain `npx` works and the flag is unnecessary. If an impatient check came first, every later call needs the flag until the cache expires.
 
 ## Failure Handling
 
@@ -312,8 +320,8 @@ Treat the publish as successful when the job log shows `+ <package-name>@<versio
 | semantic-release publishes nothing | No commit since the last tag maps to a release | Check the commit types; `docs:` and `chore:` are intentionally not releasable |
 | semantic-release picks the wrong base version | Shallow clone, or the tag history is missing | Set `fetch-depth: 0` on checkout |
 | semantic-release cannot push the tag | Checkout credentials shadow its token | Set `persist-credentials: false` on checkout and pass `GITHUB_TOKEN` to the release step |
-| `npm view` still reports the previous version after a successful publish | Registry metadata has not propagated, or `npm view` is reading a cached packument | Query the registry over HTTP and wait; never republish or bump the version again |
-| `ETARGET No matching version found` right after publishing that version | Local npm cache holds a packument from before the publish | Retry with `npx --prefer-online` or `npm install --prefer-online` |
+| `npm view` still reports the previous version after a successful publish | Registry metadata has not propagated yet | Poll the registry over HTTP and wait; never republish or bump the version again |
+| `ETARGET No matching version found` for a version that is live on the registry | An `npm view` or `npx` run during the propagation window cached a packument without the new version | Retry with `npx --prefer-online` or `npm install --prefer-online`; avoid it next time by waiting on the registry before running npm tooling |
 
 ## Guardrails
 
@@ -321,6 +329,7 @@ Treat the publish as successful when the job log shows `+ <package-name>@<versio
 - Never add `NPM_TOKEN` when Trusted Publishing works for the project.
 - Never reuse a version after a failed or partial publish; check `npm info <name> versions`.
 - Never republish because the new version has not appeared yet; confirm against the registry first.
+- Never run `npm view` or `npx` during the propagation window; the stale packument it caches is what causes `ETARGET` later.
 - Never claim a package is published without evidence: the `+ <name>@<version>` line in the publish log, or the registry itself. A lagging `npm view` is not counter-evidence.
 - Never run `npm version` or push a version tag by hand in a repository where semantic-release owns the version.
 - Never rename the publish workflow file without updating the npm Trusted Publisher to match.
