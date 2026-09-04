@@ -1,6 +1,6 @@
 {
   "name": "codex-arsenal",
-  "version": "0.6.0",
+  "version": "0.0.0-semantically-released",
   "description": "A practical arsenal of Codex plugins, skills, prompts, workflows, and configs.",
   "type": "module",
   "bin": {
@@ -42,5 +42,8 @@
     "developer-tools",
     "prompt-engineering"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "semantic-release": "^25.0.9"
+  }
 }

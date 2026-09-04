@@ -1,29 +1,48 @@
-name: Publish to npm
+# The file name must stay `publish.yml`.
+# The npm Trusted Publisher for `codex-arsenal` matches on this workflow file
+# name and the `npm` environment. Renaming either one breaks OIDC publishing
+# until the trusted publisher is updated on npmjs.com.
+name: Release
 
 on:
   push:
-    tags:
-      - "v*"
+    branches:
+      - main
+  workflow_dispatch:
 
 permissions:
   contents: read
-  id-token: write
 
 jobs:
-  publish:
+  release:
     runs-on: ubuntu-latest
     environment: npm
 
+    permissions:
+      contents: write # create git tags and GitHub releases
+      issues: write # comment on released issues
+      pull-requests: write # comment on released pull requests
+      id-token: write # npm trusted publishing (OIDC) and provenance
+
+    concurrency:
+      group: release-${{ github.ref }}
+      cancel-in-progress: false
+
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
 
       - uses: actions/setup-node@v6
         with:
           node-version: "24"
-          registry-url: "https://registry.npmjs.org"
           package-manager-cache: false
 
       - run: npm ci
       - run: npm test
       - run: npm pack --dry-run
-      - run: npm publish
+
+      - run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
