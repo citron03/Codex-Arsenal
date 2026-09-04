@@ -191,25 +191,31 @@ node bin/cli.js get codex-md --dir ./tmp-install
 
 ## Publishing
 
-This repository is configured for npm Trusted Publishing through GitHub Actions.
+Releases are automated with [semantic-release](https://github.com/semantic-release/semantic-release). Every push to `main` runs the `Release` workflow, which analyses the new commits, decides the next version, publishes to npm through Trusted Publishing (OIDC, no `NPM_TOKEN`), and creates the git tag and GitHub release.
 
-Release flow:
+There is no manual step. Do not run `npm version` and do not push tags by hand.
+
+The version comes from the commit messages:
+
+| Commit | Release |
+| --- | --- |
+| `fix:` / `perf:` | patch |
+| `feat:` | minor |
+| any type with `!` or a `BREAKING CHANGE:` footer | major |
+| `docs:` `chore:` `ci:` `refactor:` `style:` `test:` `build:` | no release |
+
+Pushes with no releasable commit finish with "There are no relevant changes" and publish nothing.
+
+`package.json` tracks the placeholder version `0.0.0-semantically-released`. semantic-release sets the real version in the CI workspace at publish time and never commits it back, so the released versions live on npm, in the git tags, and in the GitHub release notes.
+
+Preview the next release without publishing:
 
 ```bash
-npm test
-npm pack --dry-run
-npm version patch
-git push --follow-tags
+GITHUB_TOKEN=$(gh auth token) npx semantic-release --dry-run --no-ci \
+  --plugins @semantic-release/commit-analyzer,@semantic-release/release-notes-generator,@semantic-release/github
 ```
 
-Use `minor` instead of `patch` when adding new installable content or CLI behavior:
-
-```bash
-npm version minor
-git push --follow-tags
-```
-
-The publish workflow runs on `v*` tags and publishes with OIDC, so it does not require a long-lived `NPM_TOKEN`.
+See `DEPLOYMENT_GUIDE.md` and `docs/npm-publishing.md` for the full release and npm setup notes.
 
 ## Codex Plugin Distribution
 
@@ -234,6 +240,8 @@ Good additions should be:
 - installable through the manifest when appropriate;
 - verified with tests or a concrete manual check.
 
+Commit messages must follow [Conventional Commits](https://www.conventionalcommits.org/). The release version is computed from them, so `feat:` on a docs-only change publishes a needless minor version, and a real fix committed as `chore:` never reaches npm.
+
 When adding a new installable item:
 
 1. Add the files under the appropriate top-level directory.
@@ -241,6 +249,7 @@ When adding a new installable item:
 3. Run `npm test`.
 4. Run `node bin/cli.js list` and confirm the item appears.
 5. Run `npm pack --dry-run` and confirm the intended files are included.
+6. Commit as `feat:` so the next push to `main` releases a minor version.
 
 ## License
 

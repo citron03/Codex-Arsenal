@@ -1,10 +1,9 @@
 name: CI
 
+# Pushes to `main` are covered by the Release workflow, which runs the same
+# checks before publishing. This workflow only guards pull requests.
 on:
   pull_request:
-  push:
-    branches:
-      - main
 
 permissions:
   contents: read
