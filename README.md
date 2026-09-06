@@ -51,6 +51,8 @@ codex-arsenal init [--yes] [--force] [--dir <path>]
 codex-arsenal list
 codex-arsenal get <id...> [--force] [--dir <path>]
 codex-obsidian-bridge sync [--dir <path>] [--force]
+codex-obsidian-bridge open [--dir <path>] [--file <path>]
+codex-obsidian-bridge reveal [--dir <path>] [--file <path>]
 codex-obsidian-bridge draft --title <text> --summary <text> [options]
 ```
 
@@ -59,6 +61,7 @@ codex-obsidian-bridge draft --title <text> --summary <text> [options]
 - `get` installs one or more manifest entries by id.
 - Existing files are skipped by default. Add `--force` to overwrite them intentionally.
 - `codex-obsidian-bridge sync` mirrors the session bootstrap, code style, and meaningful-work notes into an Obsidian vault.
+- `codex-obsidian-bridge open` and `reveal` launch a vault note through the configured Obsidian command, or an `obsidian://` URI when no command is configured.
 - `codex-obsidian-bridge draft` writes an article draft into the configured Obsidian inbox when the meaningful-work threshold is met.
 
 The package is published on npm as [`codex-arsenal`](https://www.npmjs.com/package/codex-arsenal).
