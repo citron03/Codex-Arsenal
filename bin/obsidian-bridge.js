@@ -5,6 +5,7 @@ import {
   loadSessionConfig,
   syncObsidianNotes
 } from "../lib/obsidian-bridge.js";
+import { readListOption, readOption } from "../lib/cli-options.js";
 
 function printHelp() {
   console.log(`codex-obsidian-bridge
@@ -28,22 +29,6 @@ Options:
   --signals <items>        Comma-separated list of meaningful-work signals
   --integration-boundary   Force an article when a new integration is introduced
 `);
-}
-
-function readOption(args, name, fallback = undefined) {
-  const index = args.indexOf(name);
-  if (index === -1) {
-    return fallback;
-  }
-  return args[index + 1] || fallback;
-}
-
-function readListOption(args, name) {
-  const value = readOption(args, name, "");
-  if (!value) {
-    return [];
-  }
-  return value.split(",").map((item) => item.trim()).filter(Boolean);
 }
 
 async function main(argv) {

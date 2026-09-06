@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { MANIFEST, findManifestItems } from "../lib/manifest.js";
 import { runInit } from "../lib/installer.js";
+import { readOption } from "../lib/cli-options.js";
 
 function printHelp() {
   console.log(`codex-arsenal
@@ -12,14 +13,6 @@ Usage:
 
 By default, existing files are skipped. Use --force to overwrite them.
 `);
-}
-
-function readOption(args, name, fallback = undefined) {
-  const index = args.indexOf(name);
-  if (index === -1) {
-    return fallback;
-  }
-  return args[index + 1] || fallback;
 }
 
 function nonOptionArgs(args) {
