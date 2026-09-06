@@ -1,7 +1,11 @@
 import { access } from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { BASE_URL, MANIFEST, REPO } from "../lib/manifest.js";
+
+const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 describe("manifest", () => {
   it("uses the real GitHub repository for published package fetches", () => {
@@ -19,7 +23,7 @@ describe("manifest", () => {
       "references",
       "examples"
     ]) {
-      await access(directory);
+      await access(path.join(REPO_ROOT, directory));
     }
   });
 
@@ -64,7 +68,7 @@ describe("manifest", () => {
     assert.deepEqual(item.files, [
       { src: "skills/hermes-tweet/SKILL.md", dest: "skills/hermes-tweet/SKILL.md" }
     ]);
-    await access("skills/hermes-tweet/SKILL.md");
+    await access(path.join(REPO_ROOT, "skills/hermes-tweet/SKILL.md"));
   });
 
   it("focuses installable behavior guidance on Codex", () => {
@@ -82,7 +86,7 @@ describe("manifest", () => {
       assert.ok(item.files.length > 0, `${item.id} must install at least one file`);
 
       for (const file of item.files) {
-        await access(file.src);
+        await access(path.join(REPO_ROOT, file.src));
       }
     }
   });
