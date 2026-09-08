@@ -174,6 +174,35 @@ caught it before release.
 
 **Where.** `AGENTS.md` §3 and §6; the worked cases in `examples/README.md`.
 
+## 10. Delegated work needs a different check
+
+A change the agent wrote is verified differently from a change the developer
+wrote, and the project ships that difference as a skill rather than leaving it to
+habit.
+
+**Why.** The signal people actually use to accept a diff is having understood the
+change while writing it. When an agent writes it that signal is never produced,
+and reading a finished diff manufactures a similar feeling on much thinner
+evidence. Self-assessment does not cover the gap: in a randomized controlled
+trial, experienced developers working on repositories they maintained estimated
+afterwards that AI had made them 20% faster on tasks where it measurably slowed
+them by 19%, and expert forecasters were wrong in the same direction. The
+magnitude is contested and the tooling has moved; the roughly 39-point gap
+between measured and perceived effect is the part that has not moved. So the
+project does not let "it felt fine" close a review.
+
+**What it cost.** A verification order — claims before code, blast radius before
+style, behavior before a green suite — costs a round trip on every load-bearing
+claim, and on small changes that is pure overhead; the skill says so rather than
+pretending otherwise. It also puts the project in an awkward relationship with
+its own history, since a substantial share of these commits were themselves
+agent-written. That is the reason the check exists, not an argument against it.
+
+**Where.** `skills/verifying-agent-changes/SKILL.md`, the trial and its caveats
+in `references/README.md`, and the worked cases in `examples/README.md`. This
+principle is principle 9 applied to a case where the temptation to skip it is
+strongest.
+
 ---
 
 ## What this project is not
@@ -185,3 +214,7 @@ caught it before release.
 - **Not a place for untested advice.** Content is expected to have been used on
   real work; `references/README.md` requires that a source was read, and
   `examples/README.md` requires a commit or run that a reader can inspect.
+- **Not a productivity claim.** Nothing here asserts that working with an agent
+  makes you faster. The evidence on that is contested and the project takes no
+  position on it. The question it does address is whether the resulting work can
+  be trusted, which is separate and answerable.
