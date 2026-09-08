@@ -170,10 +170,20 @@ codex-arsenal/
   workflows/            repeatable agentic workflows
   references/           curated references and notes
   examples/             before/after examples
+  docs/                 release notes and design rationale
   test/                 Node test suite
 ```
 
 `lib/manifest.js` is the source of truth for installable items. Add new content there when you want it to appear in `codex-arsenal list` or be installable through `codex-arsenal get`.
+
+## Design Principles
+
+[`docs/design-principles.md`](docs/design-principles.md) records the decisions
+behind the project — why it installs files rather than listing links, why
+existing files are never overwritten by default, why there are no runtime
+dependencies — and what each of those choices cost. Read it before proposing a
+structural change. A Korean translation is at
+[`docs/ko/design-principles.md`](docs/ko/design-principles.md).
 
 ## Development
 
