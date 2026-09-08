@@ -9,15 +9,15 @@ import { MANIFEST } from "../lib/manifest.js";
 describe("installer", () => {
   it("copies selected manifest files into the target directory", async () => {
     const targetDir = await mkdtemp(join(tmpdir(), "codex-arsenal-"));
-    const item = MANIFEST.find((entry) => entry.id === "codex-md");
+    const item = MANIFEST.find((entry) => entry.id === "agents-md");
 
     try {
       const result = await installItems([item], targetDir);
-      const copied = await readFile(join(targetDir, "CODEX.md"), "utf8");
+      const copied = await readFile(join(targetDir, "AGENTS.md"), "utf8");
 
       assert.equal(result.installed, 1);
       assert.equal(result.failed, 0);
-      assert.deepEqual(result.successes, ["CODEX.md"]);
+      assert.deepEqual(result.successes, ["AGENTS.md"]);
       assert.match(copied, /Behavioral guidelines/);
     } finally {
       await rm(targetDir, { recursive: true, force: true });
@@ -61,18 +61,18 @@ describe("installer", () => {
 
   it("skips existing files by default instead of overwriting user content", async () => {
     const targetDir = await mkdtemp(join(tmpdir(), "codex-arsenal-"));
-    const item = MANIFEST.find((entry) => entry.id === "codex-md");
+    const item = MANIFEST.find((entry) => entry.id === "agents-md");
 
     try {
-      await writeFile(join(targetDir, "CODEX.md"), "user content", "utf8");
+      await writeFile(join(targetDir, "AGENTS.md"), "user content", "utf8");
 
       const result = await installItems([item], targetDir);
-      const copied = await readFile(join(targetDir, "CODEX.md"), "utf8");
+      const copied = await readFile(join(targetDir, "AGENTS.md"), "utf8");
 
       assert.equal(result.installed, 0);
       assert.equal(result.failed, 0);
       assert.deepEqual(result.successes, []);
-      assert.deepEqual(result.skipped, ["CODEX.md"]);
+      assert.deepEqual(result.skipped, ["AGENTS.md"]);
       assert.equal(copied, "user content");
     } finally {
       await rm(targetDir, { recursive: true, force: true });
@@ -81,13 +81,13 @@ describe("installer", () => {
 
   it("overwrites existing files only when force is enabled", async () => {
     const targetDir = await mkdtemp(join(tmpdir(), "codex-arsenal-"));
-    const item = MANIFEST.find((entry) => entry.id === "codex-md");
+    const item = MANIFEST.find((entry) => entry.id === "agents-md");
 
     try {
-      await writeFile(join(targetDir, "CODEX.md"), "user content", "utf8");
+      await writeFile(join(targetDir, "AGENTS.md"), "user content", "utf8");
 
       const result = await installItems([item], targetDir, { force: true });
-      const copied = await readFile(join(targetDir, "CODEX.md"), "utf8");
+      const copied = await readFile(join(targetDir, "AGENTS.md"), "utf8");
 
       assert.equal(result.installed, 1);
       assert.equal(result.failed, 0);
@@ -101,14 +101,14 @@ describe("installer", () => {
   it("reads packaged source files instead of target files when forcing from a target cwd", async () => {
     const targetDir = await mkdtemp(join(tmpdir(), "codex-arsenal-"));
     const originalCwd = process.cwd();
-    const item = MANIFEST.find((entry) => entry.id === "codex-md");
+    const item = MANIFEST.find((entry) => entry.id === "agents-md");
 
     try {
-      await writeFile(join(targetDir, "CODEX.md"), "user content", "utf8");
+      await writeFile(join(targetDir, "AGENTS.md"), "user content", "utf8");
       process.chdir(targetDir);
 
       const result = await installItems([item], targetDir, { force: true });
-      const copied = await readFile(join(targetDir, "CODEX.md"), "utf8");
+      const copied = await readFile(join(targetDir, "AGENTS.md"), "utf8");
 
       assert.equal(result.installed, 1);
       assert.match(copied, /Behavioral guidelines/);

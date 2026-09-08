@@ -30,7 +30,7 @@ Curated links and notes for agentic development.
 - Type: documentation
 - Why it matters: This is the de facto standard file for giving coding agents project-level instructions, and it is what OpenAI Codex actually loads. The format is deliberately unopinionated — plain Markdown, no required fields — so the value is in the convention, not the schema. Resolution is proximity-based: the file nearest the edited file wins, nested files override parents, and an explicit user prompt overrides every file. That precedence order is the part worth internalizing, because it determines whether guidance in a monorepo subdirectory actually applies.
 - Best used when: Deciding where project guidance should live, or working in a monorepo where different packages need different rules.
-- Caveats: The convention says nothing about content quality. A file that parses fine can still be too long and too vague to change agent behavior. It also does not describe how any specific agent weighs the file against its own system prompt, so behavior varies between tools even with an identical file. Note that Codex reads `AGENTS.md` specifically — a differently-named file, including this repository's `CODEX.md`, is not auto-loaded.
+- Caveats: The convention says nothing about content quality. A file that parses fine can still be too long and too vague to change agent behavior. It also does not describe how any specific agent weighs the file against its own system prompt, so behavior varies between tools even with an identical file. Note that Codex reads `AGENTS.md` specifically: a differently-named file is not auto-loaded, however good its contents. This repository shipped its guidance as `CODEX.md` until that was found to be the case.
 
 ## Codex Best Practices
 

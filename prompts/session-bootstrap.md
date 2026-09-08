@@ -1,6 +1,6 @@
 # Session Bootstrap
 
-Use this file as the first project-local note after `CODEX.md`.
+Use this file as the first project-local note after `AGENTS.md`.
 
 ## Startup Order
 

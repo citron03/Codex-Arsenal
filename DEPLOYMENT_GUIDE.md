@@ -64,7 +64,7 @@ Use `--force` only when the caller explicitly wants to overwrite existing files:
 
 ```bash
 codex-arsenal init --yes --force
-codex-arsenal get codex-md --force
+codex-arsenal get agents-md --force
 ```
 
 ## Smoke Test Published Package
@@ -79,5 +79,5 @@ npm install codex-arsenal@latest
 
 Expected result:
 
-- `CODEX.md` is created.
+- `AGENTS.md` is created.
 - Existing files are not overwritten unless `--force` is present.

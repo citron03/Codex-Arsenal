@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { BASE_URL, MANIFEST, REPO } from "../lib/manifest.js";
+import { BASE_URL, MANIFEST, REPO, findManifestItems } from "../lib/manifest.js";
 
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -74,8 +74,26 @@ describe("manifest", () => {
   it("focuses installable behavior guidance on Codex", () => {
     const behaviorItems = MANIFEST.filter((item) => item.category === "Behavior Guidelines");
 
-    assert.deepEqual(behaviorItems.map((item) => item.id), ["codex-md"]);
-    assert.deepEqual(behaviorItems.flatMap((item) => item.files.map((file) => file.src)), ["CODEX.md"]);
+    assert.deepEqual(behaviorItems.map((item) => item.id), ["agents-md"]);
+    assert.deepEqual(behaviorItems.flatMap((item) => item.files.map((file) => file.src)), ["AGENTS.md"]);
+  });
+
+  it("installs the guidance under the file name Codex loads automatically", () => {
+    const item = MANIFEST.find((entry) => entry.id === "agents-md");
+
+    assert.deepEqual(item.files, [{ src: "AGENTS.md", dest: "AGENTS.md" }]);
+    assert.equal(item.default, true);
+  });
+
+  it("still resolves the previous codex-md id", () => {
+    const [byAlias] = findManifestItems(["codex-md"]);
+    const [byId] = findManifestItems(["agents-md"]);
+
+    assert.equal(byAlias, byId);
+  });
+
+  it("rejects an id that is neither a known id nor an alias", () => {
+    assert.throws(() => findManifestItems(["codex-md-typo"]), /Unknown item: codex-md-typo/);
   });
 
   it("points every file entry at an existing repository file", async () => {

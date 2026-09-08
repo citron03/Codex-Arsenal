@@ -21,7 +21,7 @@ npx codex-arsenal init --yes
 Install specific items:
 
 ```bash
-npx codex-arsenal get codex-md skill-publishing-npm-packages
+npx codex-arsenal get agents-md skill-publishing-npm-packages
 ```
 
 Install optional planning, token-efficiency, or Obsidian support:
@@ -35,7 +35,7 @@ npx codex-arsenal get option-obsidian-session-loop
 Install into another directory:
 
 ```bash
-npx codex-arsenal get codex-md --dir ./my-project
+npx codex-arsenal get agents-md --dir ./my-project
 ```
 
 On Windows or when running from a package directory with the same name, this form is the most reliable:
@@ -72,7 +72,11 @@ The package is published on npm as [`codex-arsenal`](https://www.npmjs.com/packa
 
 | ID | Installs | Purpose |
 | --- | --- | --- |
-| `codex-md` | `CODEX.md` | Project-local behavioral guardrails for Codex-style agents. |
+| `agents-md` | `AGENTS.md` | Project-local behavioral guardrails for Codex-style agents. |
+
+Codex loads `AGENTS.md` automatically from the project root and from nested
+directories, closest file first, so the guidance applies without being pasted
+into a prompt. The previous id `codex-md` still resolves to this item.
 
 ### Configs
 
@@ -84,7 +88,7 @@ The package is published on npm as [`codex-arsenal`](https://www.npmjs.com/packa
 
 ### Add-ons
 
-These are opt-in: `init --yes` installs only the default `codex-md` guidance. Select an add-on in the interactive `init` prompt or pass its ID to `get`.
+These are opt-in: `init --yes` installs only the default `agents-md` guidance. Select an add-on in the interactive `init` prompt or pass its ID to `get`.
 
 | ID | Installs | Purpose |
 | --- | --- | --- |
@@ -189,7 +193,7 @@ Try the local CLI:
 
 ```bash
 node bin/cli.js list
-node bin/cli.js get codex-md --dir ./tmp-install
+node bin/cli.js get agents-md --dir ./tmp-install
 ```
 
 ## Publishing

@@ -7,7 +7,7 @@ description: Use when starting or ending a Codex session that should read projec
 
 ## Overview
 
-Use this skill when a project keeps session guidance in `CODEX.md`, stores session settings in `.codex/session-config.json`, and mirrors the working notes into an Obsidian vault.
+Use this skill when a project keeps session guidance in `AGENTS.md`, stores session settings in `.codex/session-config.json`, and mirrors the working notes into an Obsidian vault.
 
 ## When To Use
 
@@ -18,7 +18,7 @@ Use this skill when a project keeps session guidance in `CODEX.md`, stores sessi
 
 ## Session Startup
 
-1. Read `CODEX.md` first.
+1. Read `AGENTS.md` first.
 2. Load `.codex/session-config.json` if it exists.
 3. Read the configured session initializer, code-style note, and meaningful-work note.
 4. Sync the notes into Obsidian if `codex-obsidian-bridge` is available.
