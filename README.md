@@ -114,6 +114,7 @@ These are opt-in: `init --yes` installs only the default `agents-md` guidance. S
 | `skill-publishing-npm-packages` | `skills/publishing-npm-packages/SKILL.md` | Prepare, troubleshoot, and automate npm releases with Trusted Publishing. |
 | `skill-obsidian-session-loop` | `skills/obsidian-session-loop/SKILL.md` | Session startup, Obsidian sync, and end-of-session article drafting. |
 | `skill-hermes-tweet` | `skills/hermes-tweet/SKILL.md` | Install, configure, and safely operate the Hermes Tweet plugin. |
+| `skill-verifying-agent-changes` | `skills/verifying-agent-changes/SKILL.md` | Verify changes the agent wrote rather than you, without relying on how the session felt. |
 
 ### Plugins
 

@@ -96,6 +96,19 @@ describe("manifest", () => {
     assert.throws(() => findManifestItems(["codex-md-typo"]), /Unknown item: codex-md-typo/);
   });
 
+  it("includes the agent-change verification skill", async () => {
+    const item = MANIFEST.find((entry) => entry.id === "skill-verifying-agent-changes");
+
+    assert.equal(item.category, "Skills");
+    assert.deepEqual(item.files, [
+      {
+        src: "skills/verifying-agent-changes/SKILL.md",
+        dest: "skills/verifying-agent-changes/SKILL.md"
+      }
+    ]);
+    await access(path.join(REPO_ROOT, "skills/verifying-agent-changes/SKILL.md"));
+  });
+
   it("points every file entry at an existing repository file", async () => {
     for (const item of MANIFEST) {
       assert.ok(item.id, "item id is required");

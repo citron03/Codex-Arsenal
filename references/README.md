@@ -48,6 +48,16 @@ Curated links and notes for agentic development.
 - Best used when: Deciding whether a task needs an autonomous loop or just a fixed sequence of steps, or designing the tools an agent will call.
 - Caveats: Pattern-level, not implementation-level — you still have to build the thing. Cost and error-compounding are flagged as real risks of autonomy but not quantified, so budget for your own measurement.
 
+# Measuring AI-Assisted Work
+
+## Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity
+
+- URL: https://arxiv.org/abs/2507.09089
+- Type: paper
+- Why it matters: A randomized controlled trial rather than a survey — 16 experienced developers, 246 real issues in repositories they already maintained, each task randomly assigned to allow or forbid AI tooling. Completion time went *up* 19% when AI was allowed. The result that survives is not the headline number but the gap beside it: the same developers estimated afterwards that AI had made them 20% faster, and economists and ML experts predicted speedups of 39% and 38% before the fact. Everyone, including the people doing the work, was wrong about the direction. That is the argument for measuring instead of asking, and for keeping a verification step that does not depend on how the session felt.
+- Best used when: Deciding how much verification an AI-assisted change needs, or pushing back on a productivity claim — your own included — that rests on impression rather than measurement.
+- Caveats: Narrow by construction: 16 developers, mature repositories they knew well, tooling from early 2025. It does not measure greenfield work, unfamiliar codebases, or current agentic tools, and it was never evidence that AI assistance cannot help. METR's own [February 2026 update](https://metr.org/blog/2026-02-24-uplift-update/) reports later point estimates in the opposite direction, and simultaneously warns that selection effects make that data "only very weak evidence." Read the update carefully before quoting it: it reports *speedup* as a change in completion time, so a negative number means faster — the sign is easy to invert on a first reading. Treat the perception gap as the durable finding and the magnitude as provisional.
+
 # Context and Model Limits
 
 ## Lost in the Middle: How Language Models Use Long Contexts
