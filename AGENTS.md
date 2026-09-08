@@ -1,7 +1,9 @@
-# CODEX.md
+# AGENTS.md
 
 > Behavioral guidelines to reduce common LLM coding mistakes.  
-> Merge with project-specific instructions as needed.  
+> Codex loads this file automatically from the repository root and from nested
+> directories, closest file first. Merge with project-specific instructions —
+> setup commands, test commands, and repo layout — as needed.  
 > **Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
 
 ---

@@ -18,7 +18,7 @@ pull request, or release you can inspect.
 ## Turning "fix the option parser" into a verifiable goal
 
 - Context: Both CLI binaries parsed flags with `readOption`, which returned `args[index + 1]` unconditionally. An option given without a value silently swallowed the next flag, so `draft --title --summary "..."` produced an article titled `--summary`. The obvious instruction — "fix the option parser" — has no completion condition, so an agent can edit the function, see no error, and declare it done.
-- Input: `CODEX.md` §4 Goal-Driven Execution, which converts a vague task into an assertion written *before* the change: "Write a test that reproduces it, then make it pass."
+- Input: `AGENTS.md` §4 Goal-Driven Execution, which converts a vague task into an assertion written *before* the change: "Write a test that reproduces it, then make it pass."
 - Output: The bug was first reproduced as a standalone comparison of the old and new parser against the same argv, then fixed. Because the assertion had to be written first, the duplicated parser in both binaries was extracted to `lib/cli-options.js` where it could be unit tested — a change that would not have been motivated by the fix alone. Six unit tests now pin the behavior, including the case where an option is the last token.
 - Verification: `npm test` went from 21 to 31 passing. The reproduction is legible on its own:
 
@@ -31,12 +31,12 @@ pull request, or release you can inspect.
   Confirmed end to end against the published package, not just the local build:
   `npm exec --package=codex-arsenal@0.7.3 --call="codex-obsidian-bridge draft --title --summary 'x' ..."`
   writes the default-titled note. See commit `5c5136b`.
-- Caveats: Writing the assertion first costs a round trip that a genuinely trivial change does not repay. The extraction to `lib/` was justified here because the parser was already duplicated; doing it for a single-use function would contradict `CODEX.md` §2.
+- Caveats: Writing the assertion first costs a round trip that a genuinely trivial change does not repay. The extraction to `lib/` was justified here because the parser was already duplicated; doing it for a single-use function would contradict `AGENTS.md` §2.
 
 ## Verifying a deletion instead of assuming one
 
 - Context: The repository carried both an `.npmignore` and a `files` allowlist in `package.json`. The common knowledge that `files` takes precedence makes `.npmignore` look like obvious dead weight, and deleting it looks like a free cleanup.
-- Input: `CODEX.md` §3 Surgical Changes ("if you notice unrelated dead code, mention it — don't delete it") and §6 Tool Use Discipline ("if you need to verify, define the assertion first").
+- Input: `AGENTS.md` §3 Surgical Changes ("if you notice unrelated dead code, mention it — don't delete it") and §6 Tool Use Discipline ("if you need to verify, define the assertion first").
 - Output: Instead of deleting on the strength of the general rule, the assertion was stated first — *the tarball must be identical with and without the file* — and then tested by packing both ways and diffing the file lists. The diff was empty, which turned a plausible assumption into evidence, and that evidence went into the commit message rather than being discarded.
 - Verification: `npm pack --dry-run --json` with and without the file produced identical path lists. See commit `0b56b53`.
 - Caveats: This is worth doing when the deletion affects what ships to users. Applying the same ceremony to every unused import would be pure overhead. One further note, which was itself only settled by testing: the follow-up assumption that `.npmignore` can still exclude files *inside* a directory listed in `files` is also false on npm 10.9.2 — no pattern form tried had any effect. That is an observation about one packer version rather than a guarantee, which is precisely why the original check was a pack diff instead of an appeal to the rule.
