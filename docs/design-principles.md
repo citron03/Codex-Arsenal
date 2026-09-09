@@ -33,7 +33,7 @@ in someone else's list.
 
 ## 2. One manifest is the source of truth
 
-`lib/manifest.js` holds all 19 installable items. `list`, `get`, and `init` are
+`lib/manifest.js` holds every installable item. `list`, `get`, and `init` are
 all projections of that array — no second registry, no directory scanning.
 
 **Why.** The alternative is a list in the README, a list in the CLI, and a set of
@@ -42,9 +42,9 @@ item appears everywhere at once, and a test can assert that every declared sourc
 file actually exists.
 
 **What it cost.** Manual bookkeeping. Adding a file means editing the manifest by
-hand, and forgetting to is a silent no-op. At 19 items this is comfortable; at
-40 or 50 it will need generating from the directory tree, and that change will
-not be free.
+hand, and forgetting to is a silent no-op. At the current scale this is
+comfortable; at 40 or 50 items it will need generating from the directory tree,
+and that change will not be free.
 
 **Where.** `lib/manifest.js`, and the manifest suite in `test/manifest.test.js`
 which walks every entry and calls `access()` on its `src`.
@@ -202,6 +202,36 @@ agent-written. That is the reason the check exists, not an argument against it.
 in `references/README.md`, and the worked cases in `examples/README.md`. This
 principle is principle 9 applied to a case where the temptation to skip it is
 strongest.
+
+## 11. A rule that matters is enforced, not documented
+
+The consistency rules this document asserts are checked by `npm run
+check:invariants` on every pull request, and again before publishing.
+
+**Why.** Everything above is advisory. A person or an agent can read all of it
+and still drift, and each invariant now checked had already been violated on a
+branch and caught only because somebody happened to look: the README tables fell
+out of order against the manifest, an id outgrew the column `codex-arsenal list`
+pads to, a skill was renamed in one place and not the other, and renaming a
+shipped file left links to chase across ten documents. Attention is not a
+control. OpenAI's own Codex guidance makes the same point — pair the instruction
+file with infrastructure that enforces it, so the rules hold without being
+remembered.
+
+**What it cost.** A checker is code, and code without tests rots into something
+that passes everything — the failure mode this principle exists to prevent,
+reintroduced one level up. So each check takes the root it inspects and is
+exercised against fixtures that violate it. That roughly doubled the work of
+adding the checker and left a second thing to maintain, since fixtures drift
+from the shape of the real repository in their own way. The coverage is also
+narrow by nature: it compares ids, names, and link targets, and cannot check a
+claim made in prose, which is where the more interesting errors live. The stale
+item count in principle 2, and the sentence in this paragraph that used to say
+the checker had no tests, were both caught by reading rather than by the
+checker.
+
+**Where.** `scripts/check-invariants.mjs`, and the gates in
+`.github/workflows/ci.yml` and `.github/workflows/publish.yml`.
 
 ---
 

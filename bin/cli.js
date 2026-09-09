@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { MANIFEST, findManifestItems } from "../lib/manifest.js";
+import { ID_COLUMN_WIDTH, MANIFEST, findManifestItems } from "../lib/manifest.js";
 import { runInit } from "../lib/installer.js";
 import { readOption } from "../lib/cli-options.js";
 
@@ -38,7 +38,7 @@ function printList() {
       currentCategory = item.category;
       console.log(`\n${currentCategory}`);
     }
-    console.log(`  ${item.id.padEnd(32)} ${item.description}`);
+    console.log(`  ${item.id.padEnd(ID_COLUMN_WIDTH)} ${item.description}`);
   }
   console.log();
 }

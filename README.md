@@ -194,6 +194,18 @@ Run tests:
 npm test
 ```
 
+Check the repository invariants:
+
+```bash
+npm run check:invariants
+```
+
+This enforces the consistency rules the documentation asserts: the README item
+tables match `lib/manifest.js` in content and order, every manifest id fits the
+column `codex-arsenal list` pads to, each skill's frontmatter `name` matches its
+directory, and every relative link in the Markdown resolves. CI runs it on pull
+requests and again before publishing.
+
 Preview the npm package contents:
 
 ```bash
@@ -264,10 +276,12 @@ When adding a new installable item:
 
 1. Add the files under the appropriate top-level directory.
 2. Add a manifest entry in `lib/manifest.js`.
-3. Run `npm test`.
-4. Run `node bin/cli.js list` and confirm the item appears.
-5. Run `npm pack --dry-run` and confirm the intended files are included.
-6. Commit as `feat:` so the next push to `main` releases a minor version.
+3. Add a row to the matching README table, in the same order as the manifest.
+4. Run `npm run check:invariants`.
+5. Run `npm test`.
+6. Run `node bin/cli.js list` and confirm the item appears.
+7. Run `npm pack --dry-run` and confirm the intended files are included.
+8. Commit as `feat:` so the next push to `main` releases a minor version.
 
 ## License
 

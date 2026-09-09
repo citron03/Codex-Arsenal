@@ -21,5 +21,94 @@ jobs:
           package-manager-cache: false
 
       - run: npm ci
+      - run: npm run check:invariants
       - run: npm test
       - run: npm pack --dry-run
+
+  release-preview:
+    # Principle 8 makes the commit message decide the released version, with no
+    # human checkpoint after it. This job is that checkpoint: it reports what
+    # merging would publish, while the pull request can still be changed.
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          package-manager-cache: false
+
+      - run: npm ci
+
+      - name: Report the version this pull request would release
+        env:
+          # semantic-release takes the current branch from the CI environment,
+          # not from git. On a pull request that is `refs/pull/N/merge`, which is
+          # not a release branch, so it declines to compute a version at all —
+          # the job failed exactly this way on its first run. Presenting the step
+          # as a push to `main` is what makes it answer the question.
+          #
+          # This is safe because the run is `--dry-run` and loads only the
+          # analyzer and notes plugins: there is no publishing plugin here for
+          # the override to mislead.
+          GITHUB_REF: refs/heads/main
+          GITHUB_EVENT_NAME: push
+        run: |
+          # The branch named in --branches must also exist on the remote, so
+          # point a local `main` at this pull request's head rather than naming
+          # the topic branch. Analysis then covers the commits this pull request
+          # adds since the last tag.
+          #
+          # Omitting the npm and GitHub plugins leaves only the version
+          # calculation, so the job needs no credentials — which is what lets it
+          # run on pull requests from forks.
+          git checkout -B main
+
+          set +e
+          npx semantic-release --dry-run --no-ci --branches main \
+            --plugins @semantic-release/commit-analyzer,@semantic-release/release-notes-generator \
+            > preview.log 2>&1
+          status=$?
+          set -e
+          cat preview.log
+
+          # A preview that guesses is worse than no preview, so anything other
+          # than a recognised outcome fails the job instead of reporting one.
+          if [ "$status" -ne 0 ]; then
+            {
+              echo "## Release preview"
+              echo
+              echo "Could not compute the next version: \`semantic-release --dry-run\` exited with status ${status}. The log is in this job's output."
+              echo
+              echo "This says nothing about whether the pull request is releasable. Treat it as a broken check, not as \"publishes nothing\"."
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit "$status"
+          fi
+
+          version="$(grep -oE 'The next release version is [0-9]+\.[0-9]+\.[0-9]+' preview.log | tail -1 | awk '{ print $NF }')"
+
+          {
+            echo "## Release preview"
+            echo
+            if [ -n "$version" ]; then
+              echo "Merging this pull request publishes **v${version}** to npm."
+            elif grep -q 'no relevant changes' preview.log; then
+              echo "No releasable commits. Merging this pull request publishes nothing."
+              echo
+              echo "That is correct for a docs-only or chore-only change. If this pull request fixes a bug or adds a feature, its commit types do not say so yet."
+            else
+              echo "Could not read an outcome from \`semantic-release --dry-run\`, which exited successfully but printed neither a version nor \"no relevant changes\". The log is in this job's output."
+              echo
+              echo "Treat this as a broken check, not as \"publishes nothing\"."
+            fi
+            echo
+            echo "Derived from the Conventional Commit types on this branch by \`semantic-release --dry-run\`, the same analyzer the Release workflow uses."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if [ -z "$version" ] && ! grep -q 'no relevant changes' preview.log; then
+            exit 1
+          fi
