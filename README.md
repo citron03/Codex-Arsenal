@@ -200,6 +200,16 @@ Check the repository invariants:
 npm run check:invariants
 ```
 
+See what a branch would release:
+
+```bash
+npm run release:preview
+```
+
+It analyses the commits since the last tag with the same module and preset the
+Release workflow uses, and prints the bump and next version as JSON. CI runs it
+on every pull request and writes the answer into the job summary.
+
 This enforces the consistency rules the documentation asserts: the README item
 tables match `lib/manifest.js` in content and order, every manifest id fits the
 column `codex-arsenal list` pads to, each skill's frontmatter `name` matches its
@@ -231,10 +241,17 @@ The version comes from the commit messages:
 | --- | --- |
 | `fix:` / `perf:` | patch |
 | `feat:` | minor |
-| any type with `!` or a `BREAKING CHANGE:` footer | major |
+| any type with a `BREAKING CHANGE:` footer | major |
 | `docs:` `chore:` `ci:` `refactor:` `style:` `test:` `build:` | no release |
 
 Pushes with no releasable commit finish with "There are no relevant changes" and publish nothing.
+
+`!` does **not** mark a breaking change here. semantic-release's default preset
+is `conventional-changelog-angular`, which defines no breaking-header pattern, so
+`feat!: …` is not read as breaking — and because the marker also stops the type
+from matching, such a commit releases *nothing at all* rather than a major
+version. Use the `BREAKING CHANGE:` footer. `test/release-preview.test.js` pins
+this behaviour so a preset change cannot alter it silently.
 
 `package.json` tracks the placeholder version `0.0.0-semantically-released`. semantic-release sets the real version in the CI workspace at publish time and never commits it back, so the released versions live on npm, in the git tags, and in the GitHub release notes.
 
