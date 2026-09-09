@@ -45,15 +45,27 @@ jobs:
       - run: npm ci
 
       - name: Report the version this pull request would release
-        run: |
-          # semantic-release requires the branch it releases from to exist on the
-          # remote, so point a local `main` at this pull request's head rather
-          # than naming the topic branch. Analysis then covers the commits this
-          # pull request adds since the last tag.
+        env:
+          # semantic-release takes the current branch from the CI environment,
+          # not from git. On a pull request that is `refs/pull/N/merge`, which is
+          # not a release branch, so it declines to compute a version at all —
+          # the job failed exactly this way on its first run. Presenting the step
+          # as a push to `main` is what makes it answer the question.
           #
-          # The npm and GitHub plugins are omitted deliberately: only the version
-          # is wanted here, and without them the job needs no credentials, which
-          # is what lets it run on pull requests from forks.
+          # This is safe because the run is `--dry-run` and loads only the
+          # analyzer and notes plugins: there is no publishing plugin here for
+          # the override to mislead.
+          GITHUB_REF: refs/heads/main
+          GITHUB_EVENT_NAME: push
+        run: |
+          # The branch named in --branches must also exist on the remote, so
+          # point a local `main` at this pull request's head rather than naming
+          # the topic branch. Analysis then covers the commits this pull request
+          # adds since the last tag.
+          #
+          # Omitting the npm and GitHub plugins leaves only the version
+          # calculation, so the job needs no credentials — which is what lets it
+          # run on pull requests from forks.
           git checkout -B main
 
           set +e
