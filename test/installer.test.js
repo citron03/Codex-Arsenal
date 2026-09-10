@@ -1,4 +1,4 @@
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { describe, it } from "node:test";
@@ -115,6 +115,28 @@ describe("installer", () => {
     } finally {
       process.chdir(originalCwd);
       await rm(targetDir, { recursive: true, force: true });
+    }
+  });
+
+  it("refuses to overwrite through a symbolic link, even with --force", async () => {
+    const rootDir = await mkdtemp(join(tmpdir(), "codex-arsenal-symlink-"));
+    const targetDir = join(rootDir, "target");
+    const outsideFile = join(rootDir, "outside.txt");
+    const item = MANIFEST.find((entry) => entry.id === "agents-md");
+
+    try {
+      await mkdir(targetDir, { recursive: true });
+      await writeFile(outsideFile, "original", "utf8");
+      await symlink(outsideFile, join(targetDir, "AGENTS.md"));
+
+      const result = await installItems([item], targetDir, { force: true });
+
+      assert.equal(result.installed, 0);
+      assert.equal(result.failed, 1);
+      assert.match(result.failures[0].error, /Refusing to write through a symbolic link/);
+      assert.equal(await readFile(outsideFile, "utf8"), "original");
+    } finally {
+      await rm(rootDir, { recursive: true, force: true });
     }
   });
 

@@ -1,4 +1,4 @@
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { describe, it } from "node:test";
@@ -175,5 +175,79 @@ describe("obsidian bridge", () => {
     assert.equal(result.launched, true);
     assert.equal(calls[0].command, "obsidian");
     assert.deepEqual(calls[0].args, ["open", "Codex/Session-Initializer.md"]);
+  });
+});
+
+describe("obsidian bridge containment", () => {
+  async function vault() {
+    const root = await mkdtemp(join(tmpdir(), "codex-arsenal-vault-"));
+    await mkdir(join(root, "vault"), { recursive: true });
+    await mkdir(join(root, "proj", "prompts"), { recursive: true });
+    for (const note of ["session-bootstrap", "code-style", "meaningful-work"]) {
+      await writeFile(join(root, "proj", "prompts", `${note}.md`), "content", "utf8");
+    }
+    return root;
+  }
+
+  function config(root, overrides = {}) {
+    return {
+      obsidian: {
+        enabled: true,
+        vaultPath: join(root, "vault"),
+        inboxPath: "Inbox/Codex",
+        noteTargets: {
+          sessionInitializer: "Codex/Session-Initializer.md",
+          codeStyle: "Codex/Code-Style.md",
+          meaningfulWork: "Codex/Meaningful-Work.md"
+        },
+        ...overrides
+      },
+      articleRules: { minimumSignalsForDraft: 1 }
+    };
+  }
+
+  it("refuses a noteTarget that climbs out of the vault", async () => {
+    const root = await vault();
+    try {
+      await assert.rejects(
+        syncObsidianNotes({
+          cwd: join(root, "proj"),
+          config: config(root, { noteTargets: { sessionInitializer: "../outside/escaped.md" } })
+        }),
+        /Obsidian note must be inside the vault/
+      );
+      await assert.rejects(readFile(join(root, "outside", "escaped.md"), "utf8"), { code: "ENOENT" });
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+
+  it("refuses an inboxPath that climbs out of the vault", async () => {
+    const root = await vault();
+    try {
+      await assert.rejects(
+        draftObsidianArticle({
+          cwd: join(root, "proj"),
+          config: config(root, { inboxPath: "../outside/inbox" }),
+          title: "Escaped",
+          summary: "x",
+          integrationBoundary: true
+        }),
+        /Obsidian article must be inside the vault/
+      );
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+
+  it("still writes notes that stay inside the vault", async () => {
+    const root = await vault();
+    try {
+      const result = await syncObsidianNotes({ cwd: join(root, "proj"), config: config(root) });
+      assert.equal(result.synced.length, 3);
+      assert.equal(await readFile(join(root, "vault", "Codex", "Code-Style.md"), "utf8"), "content");
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
   });
 });

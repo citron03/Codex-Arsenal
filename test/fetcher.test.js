@@ -58,6 +58,44 @@ describe("fetcher", () => {
     await assert.rejects(fetchFile("https://example.test/missing", { get }), /HTTP 404/);
   });
 
+  it("refuses a redirect that leaves the original host", async () => {
+    const { get } = stubGet(() =>
+      fakeResponse({ statusCode: 302, headers: { location: "https://elsewhere.test/payload" } })
+    );
+
+    await assert.rejects(
+      fetchFile("https://raw.githubusercontent.test/o/r/main/a.md", { get }),
+      /Refusing to follow a redirect from raw\.githubusercontent\.test to elsewhere\.test/
+    );
+  });
+
+  it("follows a same-host redirect given as an absolute URL", async () => {
+    const { get, requested } = stubGet((url, attempt) =>
+      attempt === 1
+        ? fakeResponse({ statusCode: 302, headers: { location: "https://example.test/moved.md" } })
+        : fakeResponse({ statusCode: 200, body: "# moved" })
+    );
+
+    assert.equal(await fetchFile("https://example.test/start", { get }), "# moved");
+    assert.equal(requested.length, 2);
+  });
+
+  it("gives up when the connection stalls past the timeout", async () => {
+    let destroyedWith = null;
+    const get = () => {
+      const req = new EventEmitter();
+      req.setTimeout = (ms, onTimeout) => queueMicrotask(onTimeout);
+      req.destroy = (error) => {
+        destroyedWith = error;
+        req.emit("error", error);
+      };
+      return req;
+    };
+
+    await assert.rejects(fetchFile("https://example.test/slow", { get, timeout: 5 }), /Timed out after 5ms/);
+    assert.match(destroyedWith.message, /Timed out/);
+  });
+
   it("rejects when the request itself errors", async () => {
     const get = (url, callback) => {
       const req = new EventEmitter();

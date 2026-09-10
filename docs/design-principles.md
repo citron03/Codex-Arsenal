@@ -76,12 +76,25 @@ trusted because it currently lives in this repository is how path traversal gets
 shipped — a single `../` in a `dest` would otherwise write anywhere the process
 can reach.
 
-**What it cost.** Very little, which is the point: the check is four lines and
-runs once per file. It does forbid a legitimate-sounding case — installing into a
-sibling directory — but `--dir` covers that intent explicitly.
+**What it cost.** Very little, which is the point: the check is a handful of
+lines and runs once per file. It does forbid a legitimate-sounding case —
+installing into a sibling directory — but `--dir` covers that intent explicitly.
 
-**Where.** `resolveDestination` in `lib/installer.js`, with a test that asserts
-a malicious `dest` fails without creating the file.
+The larger cost was learning the rule has to be applied everywhere, not written
+once. The Obsidian bridge wrote to paths taken from `.codex/session-config.json`
+with no containment check at all, so a repository-supplied config could place
+files anywhere the process could reach. Containment is also lexical, so a
+symbolic link planted at an allowed destination redirected an overwrite outside
+the target. Both held for months behind a guard that looked complete.
+
+There is a boundary this principle does not cover: `obsidian.launch` in that same
+config names a command and arguments that the bridge executes. There is no shell,
+so nothing is injectable, but a config file is executable input. Run the bridge
+only against a config you trust.
+
+**Where.** `lib/safe-paths.js`, applied by `lib/installer.js` and by all three
+write paths in `lib/obsidian-bridge.js`, with tests that assert an escaping
+destination and a planted symlink both fail without touching the file outside.
 
 ## 5. No runtime dependencies
 
