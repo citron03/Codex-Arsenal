@@ -150,6 +150,11 @@ codex-obsidian-bridge reveal --dir . --file "Inbox/Codex/2026-06-11-refined-sess
 codex-obsidian-bridge draft --dir . --title "Refined session bootstrap" --summary "Added an Obsidian bridge and session-level startup guidance." --changes "added bridge CLI, added note templates" --decisions "kept config file-based" --verification "npm test" --signals "new integration boundary, README update"
 ```
 
+`.codex/session-config.json` is executable input: `obsidian.launch` names a
+command the bridge runs, and the note and inbox paths decide where it writes.
+Writes are confined to the vault and refuse to follow symbolic links, but the
+command is not sandboxed — run the bridge only against a config you trust.
+
 If you have an Obsidian CLI or local launcher, add `obsidian.launch.open` and `obsidian.launch.reveal` templates to `.codex/session-config.json`. The bridge will use those templates first and fall back to an `obsidian://` launch URI if no CLI template is configured.
 
 ### Workflows
