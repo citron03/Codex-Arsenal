@@ -246,17 +246,17 @@ The version comes from the commit messages:
 | --- | --- |
 | `fix:` / `perf:` | patch |
 | `feat:` | minor |
-| any type with a `BREAKING CHANGE:` footer | major |
+| any type with `!` or a `BREAKING CHANGE:` footer | major |
 | `docs:` `chore:` `ci:` `refactor:` `style:` `test:` `build:` | no release |
 
 Pushes with no releasable commit finish with "There are no relevant changes" and publish nothing.
 
-`!` does **not** mark a breaking change here. semantic-release's default preset
-is `conventional-changelog-angular`, which defines no breaking-header pattern, so
-`feat!: …` is not read as breaking — and because the marker also stops the type
-from matching, such a commit releases *nothing at all* rather than a major
-version. Use the `BREAKING CHANGE:` footer. `test/release-preview.test.js` pins
-this behaviour so a preset change cannot alter it silently.
+`!` works because `.releaserc.json` gives the commit analyzer a
+`breakingHeaderPattern`. semantic-release's default preset,
+`conventional-changelog-angular`, defines none of its own, and without that
+option `feat!: …` releases *nothing at all* — the marker stops the type from
+matching, so it is not even read as a feature. `test/release-preview.test.js`
+asserts both halves, so removing the option cannot pass unnoticed.
 
 `package.json` tracks the placeholder version `0.0.0-semantically-released`. semantic-release sets the real version in the CI workspace at publish time and never commits it back, so the released versions live on npm, in the git tags, and in the GitHub release notes.
 

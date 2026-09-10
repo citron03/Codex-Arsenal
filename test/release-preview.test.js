@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { bumpFor, nextVersion } from "../scripts/release-preview.mjs";
+import { analyzerOptions, bumpFor, nextVersion } from "../scripts/release-preview.mjs";
 
 function commit(message) {
   return { hash: "a".repeat(40), message };
@@ -53,12 +53,31 @@ describe("release-preview: bump for a set of commits", () => {
     assert.equal(await bumpFor([commit("fix: a bug\n\nBREAKING CHANGE: the api moved")]), "major");
   });
 
-  // The Angular preset defines no breakingHeaderPattern, so `!` is not read as
-  // breaking — and because the marker also stops the type from matching, such a
-  // commit releases nothing at all rather than releasing a major. Asserted so a
-  // preset change cannot alter it silently, and documented in README.md.
-  it("reports no release at all for the ! marker, which is not the Conventional Commits rule", async () => {
-    assert.equal(await bumpFor([commit("feat!: a breaking feature")]), null);
-    assert.equal(await bumpFor([commit("feat(scope)!: a breaking feature")]), null);
+  // The Angular preset defines no breakingHeaderPattern of its own, so `!` used
+  // to release nothing at all. .releaserc.json supplies one; these assert the
+  // Conventional Commits rule now holds, with and without a scope.
+  it("reports a major for the ! marker", async () => {
+    assert.equal(await bumpFor([commit("feat!: a breaking feature")]), "major");
+    assert.equal(await bumpFor([commit("feat(scope)!: a breaking feature")]), "major");
+    assert.equal(await bumpFor([commit("fix!: a breaking fix")]), "major");
+  });
+});
+
+// The preview is only worth reading if it cannot disagree with the release, so
+// it reads the analyzer's options from the file the Release workflow reads.
+describe("release-preview: agreement with the release configuration", () => {
+  it("takes the analyzer options from .releaserc.json", async () => {
+    const options = await analyzerOptions();
+
+    assert.ok(options.parserOpts?.breakingHeaderPattern, "expected the repository to configure a breaking-header pattern");
+    assert.match("feat!: x", new RegExp(options.parserOpts.breakingHeaderPattern));
+  });
+
+  it("uses those options rather than the preset defaults", async () => {
+    const withRepoConfig = await bumpFor([commit("feat!: a breaking feature")]);
+    const withPresetDefaults = await bumpFor([commit("feat!: a breaking feature")], {});
+
+    assert.equal(withRepoConfig, "major");
+    assert.equal(withPresetDefaults, null, "the preset alone still ignores the marker; the config is what changes it");
   });
 });

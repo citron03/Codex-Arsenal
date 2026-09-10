@@ -11,10 +11,13 @@
 // Agreement with the Release workflow is by construction, not by imitation: the
 // commits are built with git-log-parser and analysed with
 // @semantic-release/commit-analyzer — the same modules, in the same order, that
-// semantic-release itself uses.
+// semantic-release itself uses, and with the analyzer options read out of
+// .releaserc.json rather than restated here.
 import { execFile } from "node:child_process";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 import { promisify } from "node:util";
-import { pathToFileURL } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { analyzeCommits } from "@semantic-release/commit-analyzer";
 import { fields as gitLogFields, parse as parseGitLog } from "git-log-parser";
 
@@ -28,6 +31,7 @@ Object.assign(gitLogFields, {
   committerDate: { key: "ci", type: Date }
 });
 
+const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const execFileAsync = promisify(execFile);
 const BUMPS = { major: 0, minor: 1, patch: 2 };
 
@@ -75,8 +79,24 @@ export function nextVersion(tag, bump) {
 
 // Exposed so the suite can assert what the configured preset actually does,
 // which is not always what Conventional Commits leads people to expect.
-export async function bumpFor(commits) {
-  return analyzeCommits({}, { commits, logger: { log() {} }, cwd: process.cwd() });
+const ANALYZER = "@semantic-release/commit-analyzer";
+
+/**
+ * The analyzer options the Release workflow will use, taken from the same file
+ * it reads. Restating them here would let the preview and the release disagree.
+ */
+export async function analyzerOptions(root = REPO_ROOT) {
+  const { plugins = [] } = JSON.parse(await readFile(path.join(root, ".releaserc.json"), "utf8"));
+  const entry = plugins.find((plugin) => plugin === ANALYZER || (Array.isArray(plugin) && plugin[0] === ANALYZER));
+  return Array.isArray(entry) ? entry[1] ?? {} : {};
+}
+
+export async function bumpFor(commits, options) {
+  return analyzeCommits(options ?? (await analyzerOptions()), {
+    commits,
+    logger: { log() {} },
+    cwd: process.cwd()
+  });
 }
 
 export async function computePreview() {
