@@ -111,6 +111,10 @@ export function checkIdsFitTheListColumn(manifest, columnWidth) {
 // A skill is addressed by its directory name in the manifest and by its
 // frontmatter name to the agent. Renaming one and not the other leaves a skill
 // that installs correctly and is invoked by a name that no longer exists.
+//
+// Every skill ships exactly one SKILL.md. Two of them used to ship a README and
+// a prompt instead, which put them outside this check entirely — so a missing
+// SKILL.md is a failure rather than a directory to skip.
 export async function checkSkillNamesMatchDirectories(root) {
   const skillsRoot = path.join(root, "skills");
   const failures = [];
@@ -125,7 +129,8 @@ export async function checkSkillNamesMatchDirectories(root) {
       contents = await readFile(path.join(skillsRoot, entry.name, "SKILL.md"), "utf8");
     } catch (error) {
       if (error.code === "ENOENT") {
-        continue; // Older skills ship a README and prompt instead; the manifest declares what each one installs.
+        failures.push(`skills/${entry.name} has no SKILL.md`);
+        continue;
       }
       throw error;
     }
