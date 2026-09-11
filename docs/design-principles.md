@@ -226,8 +226,10 @@ and still drift, and each invariant now checked had already been violated on a
 branch and caught only because somebody happened to look: the README tables fell
 out of order against the manifest, an id outgrew the column `codex-arsenal list`
 pads to, a skill was renamed in one place and not the other, and renaming a
-shipped file left links to chase across ten documents. Attention is not a
-control. OpenAI's own Codex guidance makes the same point — pair the instruction
+shipped file left links to chase across ten documents. A fifth was added after
+the commit-type table turned out to promise a rule the release configuration did
+not implement — in three documents, two of which stayed wrong after the first was
+corrected. Attention is not a control. OpenAI's own Codex guidance makes the same point — pair the instruction
 file with infrastructure that enforces it, so the rules hold without being
 remembered.
 

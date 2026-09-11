@@ -5,6 +5,7 @@ import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import {
   checkIdsFitTheListColumn,
+  checkReleaseTablesAgree,
   checkReadmeMatchesManifest,
   checkRelativeLinksResolve,
   checkSkillNamesMatchDirectories
@@ -166,6 +167,53 @@ describe("check-invariants: skill names match directories", () => {
       const { failures, detail } = await checkSkillNamesMatchDirectories(root);
       assert.deepEqual(failures, []);
       assert.match(detail, /0 SKILL\.md/);
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+});
+
+describe("check-invariants: release tables agree", () => {
+  const table = [
+    "| Commit | Release |",
+    "| --- | --- |",
+    "| `fix:` | patch |",
+    "| `feat:` | minor |"
+  ].join("\n");
+
+  it("passes when every copy states the same table", async () => {
+    const root = await fixture({ "a.md": `# a\n\n${table}\n`, "b.md": `# b\n\n${table}\n` });
+
+    try {
+      const { failures, detail } = await checkReleaseTablesAgree(root, ["a.md", "b.md"]);
+      assert.deepEqual(failures, []);
+      assert.match(detail, /2 copies agree/);
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+
+  it("fails when one copy states a different rule, and names the difference", async () => {
+    const drifted = table.replace("| `feat:` | minor |", "| `feat:` | major |");
+    const root = await fixture({ "a.md": `# a\n\n${table}\n`, "b.md": `# b\n\n${drifted}\n` });
+
+    try {
+      const { failures } = await checkReleaseTablesAgree(root, ["a.md", "b.md"]);
+      assert.equal(failures.length, 1);
+      assert.match(failures[0], /b\.md states a different commit-type table from a\.md/);
+      assert.match(failures[0], /minor/);
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+
+  it("fails when a document that should carry the table has none", async () => {
+    const root = await fixture({ "a.md": `# a\n\n${table}\n`, "b.md": "# b\n\nno table here\n" });
+
+    try {
+      const { failures } = await checkReleaseTablesAgree(root, ["a.md", "b.md"]);
+      assert.equal(failures.length, 1);
+      assert.match(failures[0], /b\.md has no "\| Commit \| Release \|" table/);
     } finally {
       await rm(root, { recursive: true, force: true });
     }

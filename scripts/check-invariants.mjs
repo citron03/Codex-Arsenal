@@ -165,12 +165,71 @@ export async function checkRelativeLinksResolve(root) {
   return { failures, detail: `${links} relative link(s) in ${files.length} file(s)` };
 }
 
+// The commit-type table is stated in three documents, one of which is installed
+// into users' projects and so cannot simply link to the others. All three
+// claimed `!` meant a major release while the analyzer ignored the marker
+// entirely; two of them stayed wrong after the first was corrected.
+export const RELEASE_TABLE_FILES = [
+  "README.md",
+  "docs/npm-publishing.md",
+  "skills/publishing-npm-packages/SKILL.md"
+];
+
+function releaseTable(contents) {
+  const rows = [];
+  let inTable = false;
+
+  for (const line of contents.split("\n")) {
+    if (/^\|\s*Commit\s*\|\s*Release\s*\|/.test(line)) {
+      inTable = true;
+    }
+    if (inTable) {
+      if (!line.startsWith("|")) {
+        break;
+      }
+      rows.push(line.trim());
+    }
+  }
+
+  return rows;
+}
+
+export async function checkReleaseTablesAgree(root, files = RELEASE_TABLE_FILES) {
+  const failures = [];
+  const tables = new Map();
+
+  for (const file of files) {
+    const rows = releaseTable(await readFile(path.join(root, file), "utf8"));
+    if (!rows.length) {
+      failures.push(`${file} has no "| Commit | Release |" table`);
+      continue;
+    }
+    tables.set(file, rows);
+  }
+
+  const [reference, ...others] = [...tables.entries()];
+  if (reference) {
+    for (const [file, rows] of others) {
+      if (rows.join("\n") !== reference[1].join("\n")) {
+        failures.push(
+          `${file} states a different commit-type table from ${reference[0]}\n` +
+            `      only in ${reference[0]}: ${reference[1].filter((r) => !rows.includes(r)).join(" / ") || "(none)"}\n` +
+            `      only in ${file}: ${rows.filter((r) => !reference[1].includes(r)).join(" / ") || "(none)"}`
+        );
+      }
+    }
+  }
+
+  return { failures, detail: `${tables.size} copies agree` };
+}
+
 export function repositoryChecks(root = REPO_ROOT, manifest = MANIFEST, columnWidth = ID_COLUMN_WIDTH) {
   return [
     ["README tables match the manifest", () => checkReadmeMatchesManifest(root, manifest)],
     ["manifest ids fit the list column", () => checkIdsFitTheListColumn(manifest, columnWidth)],
     ["skill names match their directories", () => checkSkillNamesMatchDirectories(root)],
-    ["relative links resolve", () => checkRelativeLinksResolve(root)]
+    ["relative links resolve", () => checkRelativeLinksResolve(root)],
+    ["release tables agree", () => checkReleaseTablesAgree(root)]
   ];
 }
 
