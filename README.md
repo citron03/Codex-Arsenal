@@ -218,8 +218,9 @@ on every pull request and writes the answer into the job summary.
 This enforces the consistency rules the documentation asserts: the README item
 tables match `lib/manifest.js` in content and order, every manifest id fits the
 column `codex-arsenal list` pads to, each skill's frontmatter `name` matches its
-directory, and every relative link in the Markdown resolves. CI runs it on pull
-requests and again before publishing.
+directory, every relative link in the Markdown resolves, and the commit-type
+table states the same rules everywhere it appears. CI runs it on pull requests
+and again before publishing.
 
 Preview the npm package contents:
 
