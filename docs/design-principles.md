@@ -131,23 +131,39 @@ release is what keeps the net from being load-bearing.
 
 **Where.** `readSourceFile` in `lib/installer.js`; `BASE_URL` in `lib/manifest.js`.
 
-## 7. The filename is part of the contract
+## 7. The path is part of the contract
 
 Guidance ships as `AGENTS.md`, because that is the only instruction filename
-Codex loads automatically.
+Codex loads automatically, and skills install to `.agents/skills/<name>/SKILL.md`,
+because that is where Codex looks for them.
 
 **Why.** Content that is never read has no value however good it is. Until
 v0.7.4 this project installed `CODEX.md`, which Codex does not auto-load, so the
 flagship default install produced an inert file and nothing surfaced that. The
 name was doing work that the contents could not do.
 
+The same mistake was found twice more below the filename. Two skills shipped a
+README and a prompt where the format requires `SKILL.md`, and every skill
+installed into a plain `skills/` directory, which the documentation says is
+never scanned. Three defects, one shape: content placed where the agent does not
+look.
+
 **What it cost.** A permanent alias. The manifest id is now `agents-md`, and
 `codex-md` is kept as an alias so previously documented commands keep working —
 carried indefinitely for the benefit of callers who may not exist. That was
 judged cheaper than a breaking change to a published package.
 
+It also splits source from destination. The repository keeps its skills under
+`skills/` because that is a readable layout for people browsing it, while the
+manifest installs them under `.agents/skills/`. One consequence is left
+unresolved: Codex working in *this* repository does not discover these skills,
+since the sources are not in a scanned directory. Duplicating them into
+`.agents/skills/` would create exactly the drift this project keeps being bitten
+by, so the gap stands.
+
 **Where.** `AGENTS.md`; the `aliases` field and `findManifestItems` in
-`lib/manifest.js`.
+`lib/manifest.js`; the `dest` of every skill entry, asserted in
+`test/manifest.test.js`.
 
 ## 8. The commit type is the release decision
 

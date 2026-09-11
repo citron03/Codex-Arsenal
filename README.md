@@ -92,8 +92,8 @@ These are opt-in: `init --yes` installs only the default `agents-md` guidance. S
 
 | ID | Installs | Purpose |
 | --- | --- | --- |
-| `option-plan-counterargument` | `skills/plan-counterargument/SKILL.md` | Challenge a proposed plan and revise it when the evidence falsifies it. |
-| `option-token-efficient-execution` | `skills/token-efficient-execution/SKILL.md` | Conserve context and tool-output budget without skipping verification. |
+| `option-plan-counterargument` | `.agents/skills/plan-counterargument/SKILL.md` | Challenge a proposed plan and revise it when the evidence falsifies it. |
+| `option-token-efficient-execution` | `.agents/skills/token-efficient-execution/SKILL.md` | Conserve context and tool-output budget without skipping verification. |
 | `option-obsidian-session-loop` | Obsidian config, prompts, skill, and bridge sketch | Add session-note sync and meaningful-work article drafting in Obsidian. |
 
 ### Prompts
@@ -109,12 +109,18 @@ These are opt-in: `init --yes` installs only the default `agents-md` guidance. S
 
 | ID | Installs | Purpose |
 | --- | --- | --- |
-| `skill-debug-workflow` | `skills/debug-workflow/SKILL.md` | Reproduce, diagnose, test, and fix bugs systematically. |
-| `skill-test-gen` | `skills/test-gen/SKILL.md` | Generate focused tests from behavior notes and function signatures. |
-| `skill-publishing-npm-packages` | `skills/publishing-npm-packages/SKILL.md` | Prepare, troubleshoot, and automate npm releases with Trusted Publishing. |
-| `skill-obsidian-session-loop` | `skills/obsidian-session-loop/SKILL.md` | Session startup, Obsidian sync, and end-of-session article drafting. |
-| `skill-hermes-tweet` | `skills/hermes-tweet/SKILL.md` | Install, configure, and safely operate the Hermes Tweet plugin. |
-| `skill-verifying-agent-changes` | `skills/verifying-agent-changes/SKILL.md` | Verify changes the agent wrote rather than you, without relying on how the session felt. |
+| `skill-debug-workflow` | `.agents/skills/debug-workflow/SKILL.md` | Reproduce, diagnose, test, and fix bugs systematically. |
+| `skill-test-gen` | `.agents/skills/test-gen/SKILL.md` | Generate focused tests from behavior notes and function signatures. |
+| `skill-publishing-npm-packages` | `.agents/skills/publishing-npm-packages/SKILL.md` | Prepare, troubleshoot, and automate npm releases with Trusted Publishing. |
+| `skill-obsidian-session-loop` | `.agents/skills/obsidian-session-loop/SKILL.md` | Session startup, Obsidian sync, and end-of-session article drafting. |
+| `skill-hermes-tweet` | `.agents/skills/hermes-tweet/SKILL.md` | Install, configure, and safely operate the Hermes Tweet plugin. |
+| `skill-verifying-agent-changes` | `.agents/skills/verifying-agent-changes/SKILL.md` | Verify changes the agent wrote rather than you, without relying on how the session felt. |
+
+Skills install to `.agents/skills/<name>/SKILL.md`. Codex scans `.agents/skills`
+in every directory from the working directory up to the repository root, plus
+`$HOME/.agents/skills`; a plain `skills/` directory is never scanned, so a skill
+placed there is inert however well written it is. This repository keeps its own
+copies under `skills/` because that is its source layout, not an install target.
 
 ### Plugins
 
