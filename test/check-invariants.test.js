@@ -160,13 +160,15 @@ describe("check-invariants: skill names match directories", () => {
     }
   });
 
-  it("skips skill directories that ship no SKILL.md", async () => {
+  // Two skills once shipped a README and a prompt instead, which placed them
+  // outside this check rather than failing it.
+  it("fails a skill directory that ships no SKILL.md", async () => {
     const root = await fixture({ "skills/legacy/README.md": "# legacy\n" });
 
     try {
-      const { failures, detail } = await checkSkillNamesMatchDirectories(root);
-      assert.deepEqual(failures, []);
-      assert.match(detail, /0 SKILL\.md/);
+      const { failures } = await checkSkillNamesMatchDirectories(root);
+      assert.equal(failures.length, 1);
+      assert.match(failures[0], /skills\/legacy has no SKILL\.md/);
     } finally {
       await rm(root, { recursive: true, force: true });
     }

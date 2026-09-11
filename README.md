@@ -109,8 +109,8 @@ These are opt-in: `init --yes` installs only the default `agents-md` guidance. S
 
 | ID | Installs | Purpose |
 | --- | --- | --- |
-| `skill-debug-workflow` | `skills/debug-workflow/` | Reproduce, diagnose, test, and fix bugs systematically. |
-| `skill-test-gen` | `skills/test-gen/` | Generate focused tests from behavior notes and function signatures. |
+| `skill-debug-workflow` | `skills/debug-workflow/SKILL.md` | Reproduce, diagnose, test, and fix bugs systematically. |
+| `skill-test-gen` | `skills/test-gen/SKILL.md` | Generate focused tests from behavior notes and function signatures. |
 | `skill-publishing-npm-packages` | `skills/publishing-npm-packages/SKILL.md` | Prepare, troubleshoot, and automate npm releases with Trusted Publishing. |
 | `skill-obsidian-session-loop` | `skills/obsidian-session-loop/SKILL.md` | Session startup, Obsidian sync, and end-of-session article drafting. |
 | `skill-hermes-tweet` | `skills/hermes-tweet/SKILL.md` | Install, configure, and safely operate the Hermes Tweet plugin. |
