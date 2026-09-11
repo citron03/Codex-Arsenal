@@ -66,7 +66,7 @@ describe("manifest", () => {
     assert.equal(item.category, "Skills");
     assert.equal(item.label, "hermes-tweet");
     assert.deepEqual(item.files, [
-      { src: "skills/hermes-tweet/SKILL.md", dest: "skills/hermes-tweet/SKILL.md" }
+      { src: "skills/hermes-tweet/SKILL.md", dest: ".agents/skills/hermes-tweet/SKILL.md" }
     ]);
     await access(path.join(REPO_ROOT, "skills/hermes-tweet/SKILL.md"));
   });
@@ -103,10 +103,23 @@ describe("manifest", () => {
     assert.deepEqual(item.files, [
       {
         src: "skills/verifying-agent-changes/SKILL.md",
-        dest: "skills/verifying-agent-changes/SKILL.md"
+        dest: ".agents/skills/verifying-agent-changes/SKILL.md"
       }
     ]);
     await access(path.join(REPO_ROOT, "skills/verifying-agent-changes/SKILL.md"));
+  });
+
+  // Codex scans `.agents/skills` and never a plain `skills/` directory, so a
+  // skill installed anywhere else is inert however well formed it is. The
+  // repository keeps its readable `skills/` layout as the source.
+  it("installs every skill where Codex discovers it", () => {
+    const skillFiles = MANIFEST.flatMap((item) => item.files).filter((file) => file.dest.endsWith("SKILL.md"));
+
+    assert.ok(skillFiles.length >= 8, "expected the manifest to install skills");
+    for (const file of skillFiles) {
+      assert.match(file.dest, /^\.agents\/skills\/[a-z0-9-]+\/SKILL\.md$/, `${file.src} installs to ${file.dest}`);
+      assert.match(file.src, /^skills\/[a-z0-9-]+\/SKILL\.md$/, `${file.src} is not in the repository layout`);
+    }
   });
 
   it("points every file entry at an existing repository file", async () => {
