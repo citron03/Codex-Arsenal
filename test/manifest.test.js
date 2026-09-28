@@ -109,6 +109,23 @@ describe("manifest", () => {
     await access(path.join(REPO_ROOT, "skills/verifying-agent-changes/SKILL.md"));
   });
 
+  it("includes project verification, impact analysis, and decision trail skills", async () => {
+    const expected = [
+      ["skill-create-verification-skill", "create-verification-skill"],
+      ["skill-change-impact-analysis", "change-impact-analysis"],
+      ["skill-decision-trail", "decision-trail"]
+    ];
+
+    for (const [id, name] of expected) {
+      const item = MANIFEST.find((entry) => entry.id === id);
+      assert.equal(item.category, "Skills");
+      assert.deepEqual(item.files, [
+        { src: `skills/${name}/SKILL.md`, dest: `.agents/skills/${name}/SKILL.md` }
+      ]);
+      await access(path.join(REPO_ROOT, `skills/${name}/SKILL.md`));
+    }
+  });
+
   // Codex scans `.agents/skills` and never a plain `skills/` directory, so a
   // skill installed anywhere else is inert however well formed it is. The
   // repository keeps its readable `skills/` layout as the source.

@@ -129,6 +129,9 @@ The harness uses `gh` so tokens stay outside the repository. `.codex/github-harn
 | `skill-obsidian-session-loop` | `.agents/skills/obsidian-session-loop/SKILL.md` | Session startup, Obsidian sync, and end-of-session article drafting. |
 | `skill-hermes-tweet` | `.agents/skills/hermes-tweet/SKILL.md` | Install, configure, and safely operate the Hermes Tweet plugin. |
 | `skill-verifying-agent-changes` | `.agents/skills/verifying-agent-changes/SKILL.md` | Verify changes the agent wrote rather than you, without relying on how the session felt. |
+| `skill-create-verification-skill` | `.agents/skills/create-verification-skill/SKILL.md` | Generate and execute a project-specific guide for proving real user-facing behavior. |
+| `skill-change-impact-analysis` | `.agents/skills/change-impact-analysis/SKILL.md` | Trace consequential changes across consumers and verify critical safety assumptions. |
+| `skill-decision-trail` | `.agents/skills/decision-trail/SKILL.md` | Keep a concise evidence-backed decision log for long-running or handoff-heavy work. |
 
 Skills install to `.agents/skills/<name>/SKILL.md`. Codex scans `.agents/skills`
 in every directory from the working directory up to the repository root, plus
@@ -149,6 +152,11 @@ The bridge is designed around two repeatable actions:
 
 1. `sync` the session initializer and style notes into a vault so the notes stay close to where they are read.
 2. `draft` a session article when the configured meaningful-work criteria are met.
+
+For long-running or multi-phase work, the optional `decision-trail` skill keeps
+an evidence-backed record that can inform the end-of-session Obsidian article.
+Short tasks should skip the log; it is not a transcript or a replacement for
+verification.
 
 The default config lives in `.codex/session-config.json` and can be customized per project. A minimal vault layout looks like this:
 

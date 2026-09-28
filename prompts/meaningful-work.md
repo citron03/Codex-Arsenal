@@ -14,6 +14,8 @@ Draft an article when the session meets at least two of these signals:
 
 Always draft an article when the session introduces a new integration boundary, such as a bridge to Obsidian or another external tool.
 
+For long-running, multi-phase, or handoff-heavy work, use the `decision-trail` skill when available. Base the article's decisions and verification section on the checked log and observed results, not memory. Do not create a decision log for a short task or copy private details into the article.
+
 ## Article Template
 
 Use this outline for the draft:

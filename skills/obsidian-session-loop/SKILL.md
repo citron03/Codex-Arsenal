@@ -36,6 +36,12 @@ Treat the work as meaningful when at least two of these are true:
 
 Always treat new integration boundaries as meaningful, including the Obsidian bridge itself.
 
+For long-running, multi-phase, unattended, or handoff-heavy work, use the
+`decision-trail` skill to preserve important decisions and verification evidence.
+At the end of the session, use that verified record as source material for the
+article rather than reconstructing decisions from memory. Skip the trail for
+short tasks, and do not copy private or irrelevant details into Obsidian.
+
 ## End Of Session
 
 1. Summarize the actual change, not the file list.
