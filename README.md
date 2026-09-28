@@ -133,6 +133,25 @@ The harness uses `gh` so tokens stay outside the repository. `.codex/github-harn
 | `skill-change-impact-analysis` | `.agents/skills/change-impact-analysis/SKILL.md` | Trace consequential changes across consumers and verify critical safety assumptions. |
 | `skill-decision-trail` | `.agents/skills/decision-trail/SKILL.md` | Keep a concise evidence-backed decision log for long-running or handoff-heavy work. |
 
+These skills are opt-in and solve different problems:
+
+- Use `create-verification-skill` to inspect a repository and create a local
+  guide for running the real app and checking user-visible behavior. It does not
+  verify every future change automatically; the project must keep its guide up
+  to date.
+- Use `change-impact-analysis` before shipping consequential changes that cross
+  APIs, persisted data, integrations, or multiple consumers. Skip it for small,
+  local edits.
+- Use `decision-trail` for long-running, multi-phase, unattended, or
+  handoff-heavy work. It records decisions and evidence, not every command or
+  conversation. For short tasks, omit it.
+
+Install only the skills you want:
+
+```bash
+npx codex-arsenal get skill-create-verification-skill skill-change-impact-analysis skill-decision-trail
+```
+
 Skills install to `.agents/skills/<name>/SKILL.md`. Codex scans `.agents/skills`
 in every directory from the working directory up to the repository root, plus
 `$HOME/.agents/skills`; a plain `skills/` directory is never scanned, so a skill

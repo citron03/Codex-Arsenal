@@ -264,6 +264,69 @@ checker.
 **Where.** `scripts/check-invariants.mjs`, and the gates in
 `.github/workflows/ci.yml` and `.github/workflows/publish.yml`.
 
+## 12. Verification follows the user's surface
+
+A project needs a repeatable way to exercise the behavior people actually use,
+not only a list of unit-test commands. `create-verification-skill` inspects the
+project and writes a local guide with launch, readiness, drive, evidence,
+isolation, and cleanup instructions; it then runs one real feature through that
+guide before calling it ready.
+
+**Why.** A green test suite can still leave the main interface, a CLI path, or a
+side effect unexercised. The repository already has a general skill for
+reviewing agent-written changes; this one addresses a different gap: how to
+drive a particular project and observe what a user would observe.
+
+**What it cost.** The guide is another project-local artifact that can go stale
+when commands, selectors, or features change. Generating it also costs a real
+launch and one end-to-end check. Keep the first feature map small, update it with
+behavior changes, and mark the guide as a draft when the app cannot be run
+safely; do not generate a generic checklist just to claim coverage.
+
+**Where.** `skills/create-verification-skill/SKILL.md`, installable through
+`lib/manifest.js` as `skill-create-verification-skill`.
+
+## 13. Long work needs a trail, not a transcript
+
+For multi-phase or handoff-heavy work, `decision-trail` records consequential
+choices, reasons, evidence, and outcomes. The Obsidian session loop can use that
+checked record when drafting an article, instead of reconstructing decisions
+from memory.
+
+**Why.** A handoff needs to answer what changed, why, and what was actually
+verified. A transcript or an exhaustive activity log makes those facts harder
+to find; a short evidence pointer makes them reviewable. This complements the
+Obsidian article, which is a readable summary rather than the source of truth
+for each decision.
+
+**What it cost.** Logging introduces overhead and can preserve sensitive
+information longer than intended. It is therefore opt-in, append-only, and
+limited to meaningful checkpoints; short tasks should leave no log. Logs stay
+out of version control by default, and private data and credentials never
+belong in them.
+
+**Where.** `skills/decision-trail/SKILL.md`,
+`skills/obsidian-session-loop/SKILL.md`, and `prompts/meaningful-work.md`.
+
+## 14. Impact analysis should prove a critical assumption
+
+`change-impact-analysis` is reserved for consequential changes that cross
+contracts or consumers. It traces plausible downstream effects, selects the
+most important safety assumptions, and tests those assumptions with the
+cheapest meaningful execution.
+
+**Why.** A list of callers is easy to produce and often misses the failure that
+matters. The useful result is a grounded account of which consumer could break
+and what evidence supports or weakens that risk.
+
+**What it cost.** Tracing and testing every hypothetical interaction would
+slow ordinary changes and create noise. The skill is deliberately scoped to
+shared APIs, persisted formats, external integrations, and other broad changes;
+it asks for a proportional check and permits an explicit unverified result.
+
+**Where.** `skills/change-impact-analysis/SKILL.md`, installable through
+`lib/manifest.js` as `skill-change-impact-analysis`.
+
 ---
 
 ## What this project is not
