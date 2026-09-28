@@ -30,6 +30,7 @@ Install optional planning, token-efficiency, or Obsidian support:
 npx codex-arsenal get option-plan-counterargument
 npx codex-arsenal get option-token-efficient-execution
 npx codex-arsenal get option-obsidian-session-loop
+npx codex-arsenal get option-github-issue-harness
 ```
 
 Install into another directory:
@@ -95,6 +96,19 @@ These are opt-in: `init --yes` installs only the default `agents-md` guidance. S
 | `option-plan-counterargument` | `.agents/skills/plan-counterargument/SKILL.md` | Challenge a proposed plan and revise it when the evidence falsifies it. |
 | `option-token-efficient-execution` | `.agents/skills/token-efficient-execution/SKILL.md` | Conserve context and tool-output budget without skipping verification. |
 | `option-obsidian-session-loop` | Obsidian config, prompts, skill, and bridge sketch | Add session-note sync and meaningful-work article drafting in Obsidian. |
+| `option-github-issue-harness` | `.codex/github-harness.json`, `.agents/skills/github-issue-harness/SKILL.md` | Triage GitHub issues and enable selected issue updates using GitHub CLI authentication. |
+
+### GitHub Issue Harness
+
+Install the optional harness and authenticate with GitHub CLI or a `GH_TOKEN` environment variable:
+
+```bash
+npx codex-arsenal get option-github-issue-harness
+gh auth login
+gh auth status
+```
+
+The harness uses `gh` so tokens stay outside the repository. `.codex/github-harness.json` enables issue discovery and triage by default; assignment, labels, comments, and closing remain individually disabled until enabled. `mode: "auto"` does not bypass those per-action settings. Never commit a personal access token or paste one into a prompt.
 
 ### Prompts
 

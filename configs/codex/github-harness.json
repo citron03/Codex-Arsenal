@@ -1,0 +1,19 @@
+{
+  "github": {
+    "enabled": true,
+    "repository": null,
+    "auth": {
+      "provider": "gh-cli",
+      "tokenEnv": "GH_TOKEN"
+    },
+    "issues": {
+      "enabled": true,
+      "mode": "review",
+      "autoTriage": true,
+      "autoAssign": false,
+      "autoLabel": false,
+      "autoComment": false,
+      "autoClose": false
+    }
+  }
+}
