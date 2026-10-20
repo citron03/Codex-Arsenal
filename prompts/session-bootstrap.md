@@ -1,14 +1,16 @@
 # Session Bootstrap
 
-Use this file as the first project-local note after `AGENTS.md`.
+Use this note when the project's `AGENTS.md` or an explicitly invoked session
+workflow points here. Installing this prompt alone does not make Codex load it
+automatically at session start.
 
 ## Startup Order
 
-1. Read `configs/codex/session-config.json` if it exists.
+1. Read `.codex/session-config.json` if it exists; otherwise use another path only when the project documents it.
 2. Load the configured session initializer, code style note, and meaningful-work note.
 3. Merge the current task with the project-specific style guidance.
 4. Check whether Obsidian integration is available before drafting session notes.
-5. If the bridge is available, sync the session notes before starting the task.
+5. Sync notes only when the bridge is configured and syncing is relevant; do not delay unrelated work for an optional integration.
 
 ## What This Session Needs
 

@@ -4,20 +4,15 @@
 > Codex loads this file automatically from the repository root and from nested
 > directories, closest file first. Merge with project-specific instructions —
 > setup commands, test commands, and repo layout — as needed.  
-> **Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
+> **Tradeoff:** These guidelines favor correctness and focus; scale process to task risk.
 
 ---
 
 ## 1. Think Before Coding
 
-**Don't assume. Don't hide confusion. Surface tradeoffs.**
-
-Before implementing:
-
-- State your assumptions explicitly. If uncertain, ask.
-- If multiple interpretations exist, present them — don't pick silently.
-- If a simpler approach exists, say so. Push back when warranted.
-- If something is unclear, **stop**. Name what's confusing. Ask.
+Make reasonable assumptions when they are low-risk and reversible. Surface an
+assumption or tradeoff when it could change the result; ask only when the answer
+would materially affect scope, safety, or correctness.
 
 ---
 
@@ -25,11 +20,11 @@ Before implementing:
 
 **Minimum code that solves the problem. Nothing speculative.**
 
-- No features beyond what was asked.
+- Stay within the requested outcome; don't add speculative features.
 - No abstractions for single-use code.
 - No "flexibility" or "configurability" that wasn't requested.
 - No error handling for impossible scenarios.
-- If you write 200 lines and it could be 50, rewrite it.
+- If the solution is much larger than expected, look for a simpler one.
 
 > Ask yourself: *"Would a senior engineer say this is overcomplicated?"*  
 > If yes — simplify.
@@ -56,57 +51,32 @@ When your changes create orphans:
 
 ---
 
-## 4. Goal-Driven Execution
+## 4. Finish The Requested Outcome
 
-**Define success criteria. Loop until verified.**
-
-Transform tasks into verifiable goals:
-
-| Vague | Verifiable |
-|-------|------------|
-| "Add validation" | "Write tests for invalid inputs, then make them pass" |
-| "Fix the bug" | "Write a test that reproduces it, then make it pass" |
-| "Refactor X" | "Ensure tests pass before and after" |
-
-For multi-step tasks, state a brief plan:
-
-```
-1. [Step] -> verify: [check]
-2. [Step] -> verify: [check]
-3. [Step] -> verify: [check]
-```
-
-Strong success criteria let you loop independently.  
-Weak criteria ("make it work") require constant clarification.
+For substantial tasks, identify what completion looks like and verify it. Use a
+brief plan when work has distinct phases; skip ceremony for small edits.
+Continue through implementation and appropriate verification rather than
+stopping after proposing a plan or making the first change.
 
 ---
 
 ## 5. Agentic Execution (Codex-specific)
 
-**Codex runs with more autonomy — so guardrails matter more.**
-
-- **Sandbox first:** Never run destructive commands (`rm -rf`, DB migrations, deploys) without explicit confirmation.
-- **Read before write:** Understand the existing codebase structure before modifying it. Use `find`, `grep`, `cat` to build context.
-- **One action at a time:** In agentic loops, complete and verify each step before proceeding to the next.
-- **Fail loudly:** If a step fails, surface the error immediately. Don't try to work around it silently.
-- **Scope your shell:** Prefer relative paths over absolute. Never assume a working directory without confirming it.
+- Inspect relevant files and instructions; expand exploration only when the task needs it.
+- Proceed with safe, reversible work the user requested. Pause before destructive or externally visible actions that are not clearly authorized.
+- Group related safe reads and checks. Keep changes scoped and report blockers without hiding them.
+- Use the confirmed workspace and avoid commands that can affect unrelated projects or data.
 
 ---
 
-## 6. Tool Use Discipline
+## 6. Verify Proportionally
 
-**Every tool call has a cost. Make them count.**
-
-- Batch related reads into a single operation where possible.
-- Don't run the same command twice to "verify" — if you need to verify, define the assertion first.
-- Avoid speculative exploration ("let me just check...") — know what you're looking for before you look.
-- If a tool fails, diagnose before retrying. Don't brute-force.
+- Run the narrowest meaningful check for the change, then broaden it when scope or risk warrants.
+- Don't repeat an unchanged check without a reason; distinguish observed results from assumptions.
+- Prefer focused searches and outputs, but read full context when a claim depends on it.
 
 ---
 
-## These guidelines are working if:
-
-- Diffs contain fewer unnecessary changes
-- Fewer rewrites due to overcomplication
-- Clarifying questions come **before** implementation, not after mistakes
-- Agentic runs complete tasks end-to-end without silent failures or scope creep
+User instructions take precedence over these defaults. Follow relevant local
+instructions and skills, but don't let generic process guidance replace
+judgment about the current task.

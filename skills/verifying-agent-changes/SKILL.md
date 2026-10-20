@@ -1,6 +1,6 @@
 ---
 name: verifying-agent-changes
-description: Use when reviewing or accepting a change the agent wrote rather than the developer, and the session needs a verification step that does not depend on how confident the work felt.
+description: Review agent-written changes using concrete evidence rather than confidence.
 ---
 
 # Verifying Agent-Written Changes

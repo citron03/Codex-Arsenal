@@ -83,7 +83,7 @@ into a prompt. The previous id `codex-md` still resolves to this item.
 
 | ID | Installs | Purpose |
 | --- | --- | --- |
-| `config-codex` | `.codex/config.json` | Starter Codex config. |
+| `config-codex` | `.codex/config.toml` | GPT-6 Astra starter config with medium reasoning, on-request approvals, and workspace-write sandbox. |
 | `config-session-bootstrap` | `.codex/session-config.json` | Session bootstrap and Obsidian bridge settings. |
 | `config-vscode` | `.vscode/settings.json` | VS Code settings for agent-assisted development. |
 
@@ -157,6 +157,11 @@ in every directory from the working directory up to the repository root, plus
 `$HOME/.agents/skills`; a plain `skills/` directory is never scanned, so a skill
 placed there is inert however well written it is. This repository keeps its own
 copies under `skills/` because that is its source layout, not an install target.
+
+Keep only relevant skills installed in a project: their names and descriptions
+are used for discovery, and overlapping or overly broad descriptions make
+routing less reliable. Descriptions are short; detailed workflow guidance
+belongs in each skill body.
 
 ### Plugins
 
@@ -237,6 +242,21 @@ existing files are never overwritten by default, why there are no runtime
 dependencies — and what each of those choices cost. Read it before proposing a
 structural change. A Korean translation is at
 [`docs/ko/design-principles.md`](docs/ko/design-principles.md).
+
+The starter `.codex/config.toml` uses GPT-6 Astra with medium reasoning,
+on-request approvals, and a workspace-write sandbox. Change the model or
+reasoning effort to match your account and workload; installed skills remain
+model-agnostic and opt-in. Codex reads project configuration only for trusted
+projects. The Obsidian session initializer is guidance, not a session-start
+hook: reference it from `AGENTS.md` or invoke `obsidian-session-loop` when you
+want that workflow to run.
+
+These instructions are tuned to current Codex behavior: keep skill descriptions
+specific and concise, load detailed procedures only when relevant, avoid
+repeating routine checks, and state the completion goal when follow-through
+matters. See OpenAI's [GPT-6 prompting guidance](https://developers.openai.com/api/docs/guides/latest-model#prompting-best-practices)
+and [Codex configuration reference](https://developers.openai.com/codex/config-reference)
+for current details.
 
 ## Development
 

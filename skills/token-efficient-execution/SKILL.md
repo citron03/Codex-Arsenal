@@ -1,6 +1,6 @@
 ---
 name: token-efficient-execution
-description: Use when a Codex task should conserve context and tool-output budget without reducing verification quality.
+description: Reduce unnecessary context and tool output while preserving useful verification.
 ---
 
 # Token-Efficient Execution

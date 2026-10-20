@@ -12,7 +12,7 @@ Draft an article when the session meets at least two of these signals:
 - the change requires verification beyond a quick smoke check;
 - the task includes a substantive README or documentation update.
 
-Always draft an article when the session introduces a new integration boundary, such as a bridge to Obsidian or another external tool.
+Draft an article for a new integration boundary when the work is verified and an Obsidian destination is configured.
 
 For long-running, multi-phase, or handoff-heavy work, use the `decision-trail` skill when available. Base the article's decisions and verification section on the checked log and observed results, not memory. Do not create a decision log for a short task or copy private details into the article.
 

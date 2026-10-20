@@ -1,6 +1,6 @@
 ---
 name: debug-workflow
-description: Use when a Codex session is diagnosing a bug and the project wants the failure reproduced and pinned by a test before any production code changes.
+description: Reproduce a bug, find its cause, and verify a focused fix.
 ---
 
 # Debug Workflow

@@ -1,4 +1,4 @@
-import { access } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, it } from "node:test";
@@ -51,6 +51,19 @@ describe("manifest", () => {
     assert.ok(ids.has("skill-obsidian-session-loop"));
     assert.ok(ids.has("plugin-obsidian-codex-bridge"));
     assert.ok(ids.has("option-obsidian-session-loop"));
+  });
+
+  it("installs a current Codex TOML configuration rather than a JSON lookalike", async () => {
+    const item = MANIFEST.find((entry) => entry.id === "config-codex");
+
+    assert.deepEqual(item.files, [
+      { src: "configs/codex/config.toml", dest: ".codex/config.toml" }
+    ]);
+    const config = await readFile(path.join(REPO_ROOT, "configs/codex/config.toml"), "utf8");
+    assert.match(config, /^model = "gpt-6-astra"$/m);
+    assert.match(config, /^model_reasoning_effort = "medium"$/m);
+    assert.match(config, /^approval_policy = "on-request"$/m);
+    assert.match(config, /^sandbox_mode = "workspace-write"$/m);
   });
 
   it("offers optional planning counterargument and token-efficient execution skills", () => {

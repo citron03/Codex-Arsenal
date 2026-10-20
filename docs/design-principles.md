@@ -327,6 +327,27 @@ it asks for a proportional check and permits an explicit unverified result.
 **Where.** `skills/change-impact-analysis/SKILL.md`, installable through
 `lib/manifest.js` as `skill-change-impact-analysis`.
 
+## 15. Instructions are defaults, not a script for every task
+
+The shared `AGENTS.md` and skill descriptions should set clear boundaries and
+completion expectations without prescribing every tool call. Skills stay
+focused and opt-in; detailed procedures load only when their workflow applies.
+
+**Why.** Current Codex models follow instructions more reliably, but every
+always-loaded rule still competes for attention, and ambiguous or conflicting
+guidance can make the agent stop unnecessarily. A short trigger description
+also makes it easier to choose among the repository's growing skill set.
+
+**What it cost.** Less scaffolding puts more weight on judgment and makes the
+guidance less deterministic across models. Safety boundaries and evidence
+requirements remain explicit where they matter; routine steps are left to the
+agent, and behavior should be adjusted from observed failures rather than
+preemptive boilerplate. The starter Codex config is a model-specific default,
+not a promise that every user has access to that model.
+
+**Where.** `AGENTS.md`, the `description` fields in `skills/*/SKILL.md`, and
+`configs/codex/config.toml`.
+
 ---
 
 ## What this project is not

@@ -1,6 +1,6 @@
 ---
 name: test-gen
-description: Use when a Codex session needs tests written from behaviour notes and function signatures rather than from the implementation in front of it.
+description: Design focused tests from expected behavior and public contracts.
 ---
 
 # Test Gen

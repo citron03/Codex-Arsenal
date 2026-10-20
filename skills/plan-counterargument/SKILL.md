@@ -1,6 +1,6 @@
 ---
 name: plan-counterargument
-description: Use when planning a Codex task and the project wants each proposed plan challenged before implementation.
+description: Challenge the assumptions and scope of a substantial plan before implementation.
 ---
 
 # Plan Counterargument

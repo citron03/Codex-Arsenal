@@ -1,6 +1,6 @@
 ---
 name: publishing-npm-packages
-description: Use when preparing, troubleshooting, or automating npm package releases, especially GitHub Actions Trusted Publishing, provenance, 2FA publish errors, version tags, npm pack checks, or npx CLI packages.
+description: Prepare or troubleshoot npm releases, including Trusted Publishing and semantic-release.
 ---
 
 # Publishing npm Packages

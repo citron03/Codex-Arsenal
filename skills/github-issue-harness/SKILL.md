@@ -1,6 +1,6 @@
 ---
 name: github-issue-harness
-description: Use when connecting a Codex coding session to GitHub issues for issue discovery, triage, task planning, and explicitly configured issue updates through the GitHub CLI.
+description: Triage GitHub issues and prepare configured issue updates with GitHub CLI.
 ---
 
 # GitHub Issue Harness

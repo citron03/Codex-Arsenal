@@ -1,6 +1,6 @@
 ---
 name: decision-trail
-description: Use for long-running, multi-phase, unattended, or handoff-heavy work where a reviewer needs a concise record of decisions and evidence.
+description: Record key decisions and evidence during long-running or handoff-heavy work.
 ---
 
 # Decision Trail

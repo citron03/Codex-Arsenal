@@ -1,6 +1,6 @@
 ---
 name: hermes-tweet
-description: Use when installing, configuring, troubleshooting, or safely operating the Hermes Tweet plugin for Hermes Agent X/Twitter automation through Xquik.
+description: Install, configure, or safely operate Hermes Tweet for X/Twitter workflows.
 ---
 
 # Hermes Tweet

@@ -1,6 +1,6 @@
 ---
 name: change-impact-analysis
-description: Use before shipping a change that crosses shared APIs, persisted data, external integrations, or multiple consumers, or when asked what a change could break.
+description: Trace downstream risks and test critical assumptions for changes crossing APIs, stored data, or integrations.
 ---
 
 # Change Impact Analysis

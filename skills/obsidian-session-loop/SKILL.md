@@ -1,6 +1,6 @@
 ---
 name: obsidian-session-loop
-description: Use when starting or ending a Codex session that should read project-local session notes, sync Obsidian-backed style guidance, and draft an article when the work is meaningful.
+description: Load project session guidance and draft qualifying work summaries to Obsidian.
 ---
 
 # Obsidian Session Loop
@@ -11,18 +11,16 @@ Use this skill when a project keeps session guidance in `AGENTS.md`, stores sess
 
 ## When To Use
 
-- At the start of a Codex session for this repository.
+- When explicitly invoked at session start; installing a skill does not run it automatically.
 - When the project wants a code-style note to influence the current session.
 - When the work should produce a session article in Obsidian.
 - When the task touches the session bootstrap, Obsidian bridge, or the meaningful-work criteria.
 
 ## Session Startup
 
-1. Read `AGENTS.md` first.
-2. Load `.codex/session-config.json` if it exists.
-3. Read the configured session initializer, code-style note, and meaningful-work note.
-4. Sync the notes into Obsidian if `codex-obsidian-bridge` is available.
-5. Merge the code-style note into the current working style before editing files.
+1. Follow applicable `AGENTS.md` instructions and load `.codex/session-config.json` when this workflow is invoked.
+2. Read the configured initializer, style, and meaningful-work notes that exist.
+3. Sync through `codex-obsidian-bridge` only when configured and useful; merge the style note into the current task.
 
 ## Meaningful Work Check
 

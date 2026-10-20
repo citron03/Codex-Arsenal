@@ -1,6 +1,6 @@
 ---
 name: create-verification-skill
-description: Use when a project needs a repository-specific skill that launches its real application, exercises user-facing behavior, and captures evidence beyond unit tests.
+description: Create a project-specific guide for exercising real user behavior and recording verification evidence.
 ---
 
 # Create a Project Verification Skill
