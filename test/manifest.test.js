@@ -60,10 +60,17 @@ describe("manifest", () => {
       { src: "configs/codex/config.toml", dest: ".codex/config.toml" }
     ]);
     const config = await readFile(path.join(REPO_ROOT, "configs/codex/config.toml"), "utf8");
-    assert.match(config, /^model = "gpt-6-astra"$/m);
+    assert.match(config, /^model = "gpt-6\.2-sol"$/m);
     assert.match(config, /^model_reasoning_effort = "medium"$/m);
     assert.match(config, /^approval_policy = "on-request"$/m);
     assert.match(config, /^sandbox_mode = "workspace-write"$/m);
+  });
+
+  it("keeps Obsidian writes disabled until a real vault is configured", async () => {
+    const config = JSON.parse(await readFile(path.join(REPO_ROOT, "configs/codex/session-config.json"), "utf8"));
+
+    assert.equal(config.obsidian.enabled, false);
+    assert.ok(config.obsidian.vaultPath);
   });
 
   it("offers optional planning counterargument and token-efficient execution skills", () => {

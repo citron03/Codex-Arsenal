@@ -343,7 +343,9 @@ guidance less deterministic across models. Safety boundaries and evidence
 requirements remain explicit where they matter; routine steps are left to the
 agent, and behavior should be adjusted from observed failures rather than
 preemptive boilerplate. The starter Codex config is a model-specific default,
-not a promise that every user has access to that model.
+not a promise that every user has access to that model. GPT-6.2 Sol is the
+current starting point for most Codex work; demanding tasks may benefit from
+Astra, and the model catalog changes over time.
 
 **Where.** `AGENTS.md`, the `description` fields in `skills/*/SKILL.md`, and
 `configs/codex/config.toml`.

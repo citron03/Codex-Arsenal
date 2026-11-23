@@ -126,7 +126,7 @@ describe("check-invariants: ids fit the list column", () => {
 
 describe("check-invariants: skill names match directories", () => {
   it("passes when frontmatter agrees with the directory", async () => {
-    const root = await fixture({ "skills/alpha/SKILL.md": "---\nname: alpha\n---\n" });
+    const root = await fixture({ "skills/alpha/SKILL.md": "---\nname: alpha\ndescription: Run the alpha workflow.\n---\n" });
 
     try {
       const { failures } = await checkSkillNamesMatchDirectories(root);
@@ -137,7 +137,7 @@ describe("check-invariants: skill names match directories", () => {
   });
 
   it("fails when the frontmatter name drifts from the directory", async () => {
-    const root = await fixture({ "skills/alpha/SKILL.md": "---\nname: renamed\n---\n" });
+    const root = await fixture({ "skills/alpha/SKILL.md": "---\nname: renamed\ndescription: Run the alpha workflow.\n---\n" });
 
     try {
       const { failures } = await checkSkillNamesMatchDirectories(root);
@@ -169,6 +169,49 @@ describe("check-invariants: skill names match directories", () => {
       const { failures } = await checkSkillNamesMatchDirectories(root);
       assert.equal(failures.length, 1);
       assert.match(failures[0], /skills\/legacy has no SKILL\.md/);
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+
+  it("fails when the skill name is not valid Agent Skills metadata", async () => {
+    const root = await fixture({
+      "skills/alpha/SKILL.md": "---\nname: Alpha Skill\ndescription: Run the alpha workflow.\n---\n"
+    });
+
+    try {
+      const { failures } = await checkSkillNamesMatchDirectories(root);
+      assert.equal(failures.length, 2);
+      assert.match(failures[0], /declares name "Alpha Skill"/);
+      assert.match(failures[1], /name must be 1-64 lowercase/);
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+
+  it("requires a non-empty description within the standard limit", async () => {
+    const root = await fixture({
+      "skills/alpha/SKILL.md": `---\nname: alpha\ndescription: ${"x".repeat(1025)}\n---\n`
+    });
+
+    try {
+      const { failures } = await checkSkillNamesMatchDirectories(root);
+      assert.equal(failures.length, 1);
+      assert.match(failures[0], /description exceeds 1024 characters/);
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+
+  it("fails when the description is empty", async () => {
+    const root = await fixture({
+      "skills/alpha/SKILL.md": "---\nname: alpha\ndescription:\n---\n"
+    });
+
+    try {
+      const { failures } = await checkSkillNamesMatchDirectories(root);
+      assert.equal(failures.length, 1);
+      assert.match(failures[0], /no non-empty "description:"/);
     } finally {
       await rm(root, { recursive: true, force: true });
     }

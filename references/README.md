@@ -34,11 +34,35 @@ Curated links and notes for agentic development.
 
 ## Codex Best Practices
 
-- URL: https://learn.chatgpt.com/guides/best-practices
+- URL: https://learn.chatgpt.com/docs/customization/overview
 - Type: documentation
-- Why it matters: The most concrete of OpenAI's Codex guidance. It frames a task prompt as four parts — goal, context, constraints, and a "done when" condition — which maps directly onto the difference between a task an agent can close on its own and one that needs constant clarification. It is also explicit about the failure modes: overloading prompts with what belongs in `AGENTS.md`, skipping planning on multi-step work, granting broad permissions before you understand the workflow, and running an entire project through one bloated conversation.
-- Best used when: Writing a task prompt for a non-trivial change, or diagnosing why an agent keeps stopping to ask questions.
-- Caveats: Written for OpenAI's own products, so the specific commands and permission controls do not transfer to other agents. The advice to keep instruction files short is stated but not quantified — you have to find the ceiling empirically.
+- Why it matters: Explains Codex's current instruction and skill layers, including user and repo scope, metadata-first skill discovery, and progressive loading of full skill instructions and supporting resources. That makes it useful for deciding what belongs in always-loaded `AGENTS.md` versus an opt-in skill.
+- Best used when: Organizing project guidance or diagnosing why a skill does not activate reliably.
+- Caveats: Product behavior and skill discovery locations are Codex-specific and can change. Recheck the live docs before treating this as a cross-agent convention.
+
+## Agent Skills Specification
+
+- URL: https://agentskills.io/specification
+- Type: specification
+- Why it matters: Defines the portable directory and `SKILL.md` format used by Codex and other compatible agents, including required `name` and `description` fields and their constraints.
+- Best used when: Authoring or validating reusable skills.
+- Caveats: The format standardizes the package shape, not discovery paths, activation quality, tool access, or runtime behavior across products.
+
+## Codex Hooks
+
+- URL: https://learn.chatgpt.com/docs/hooks
+- Type: documentation
+- Why it matters: Documents lifecycle events such as `SessionStart` and `SessionEnd`, their input/output contracts, trust review, and execution limits. A project can use automatically loaded `AGENTS.md` for simple startup guidance and reserve hooks for deterministic side effects or context injection that truly needs a command.
+- Best used when: Choosing between static instructions and lifecycle automation.
+- Caveats: Hook support and trust requirements vary by execution surface. `SessionEnd` output is advisory and does not make the model generate an article; validate actual behavior before relying on a hook.
+
+## Obsidian CLI
+
+- URL: https://obsidian.md/help/cli
+- Type: documentation
+- Why it matters: Official instructions for enabling the CLI shipped with Obsidian, registering it, and controlling a running vault from scripts.
+- Best used when: Connecting local coding workflows to an Obsidian vault.
+- Caveats: Requires a compatible Obsidian installer, user activation, and a running app for many commands. The bridge's direct Markdown file writes do not require the CLI.
 
 ## Building Effective Agents
 

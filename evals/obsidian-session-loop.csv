@@ -1,0 +1,6 @@
+id,should_trigger,prompt
+explicit,true,"Use $obsidian-session-loop to load this project's session notes and check whether this verified work qualifies for an Obsidian article."
+startup,true,"Start work in this repository by applying its configured session initializer and code-style note."
+article,true,"The multi-file integration is implemented and verified. Check the configured meaningful-work rules and draft an Obsidian article if they pass."
+simple_edit,false,"Fix this one typo in README.md; don't do any Obsidian work."
+general_question,false,"What is Obsidian and what is a vault?"

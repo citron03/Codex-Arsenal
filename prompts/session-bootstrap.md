@@ -1,8 +1,8 @@
 # Session Bootstrap
 
-Use this note when the project's `AGENTS.md` or an explicitly invoked session
-workflow points here. Installing this prompt alone does not make Codex load it
-automatically at session start.
+The project's `AGENTS.md` points to this note so Codex reads it at session
+startup. When used alone, this prompt is not loaded automatically; reference it
+from `AGENTS.md` or explicitly invoke the session workflow.
 
 ## Startup Order
 

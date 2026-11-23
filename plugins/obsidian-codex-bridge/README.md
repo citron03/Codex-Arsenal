@@ -21,10 +21,18 @@ Make the session bootstrap, code-style note, and end-of-session article draft pa
 
 ## Obsidian CLI
 
-If an `obsidian` command is available, the bridge can use it to open the vault, reveal the generated note, or hand off to a vault-local workflow. If the CLI is not available, keep the markdown files as the source of truth and mirror them manually.
+Use Obsidian's official CLI, which is included with the current Obsidian
+installer. Enable **Settings → General → Command line interface**, register it
+when prompted, restart the terminal, and verify with `obsidian help`. Do not
+install the unrelated npm package named `obsidian-cli`. See the
+[official CLI guide](https://obsidian.md/help/cli).
 
 ## Practical CLI
 
 The repository now ships a small `codex-obsidian-bridge` command that can sync the notes, open or reveal a note, and draft an article into the configured inbox.
 
-If a project has an Obsidian CLI, configure `obsidian.launch.open` and `obsidian.launch.reveal` in `.codex/session-config.json`. Otherwise the bridge falls back to an `obsidian://` URI launch.
+Configure `obsidian.launch.open` and `obsidian.launch.reveal` in
+`.codex/session-config.json` to use the CLI for opening notes. The bridge falls
+back to an `obsidian://` URI if no CLI command is configured. File sync and
+article drafting write Markdown directly to the configured vault paths; they do
+not require the CLI, but they do require a correct and trusted vault path.

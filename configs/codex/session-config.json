@@ -3,7 +3,7 @@
   "codeStyleNote": "prompts/code-style.md",
   "meaningfulWorkNote": "prompts/meaningful-work.md",
   "obsidian": {
-    "enabled": true,
+    "enabled": false,
     "cliCommand": "obsidian",
     "vaultPath": "~/Obsidian/Codex",
     "inboxPath": "Inbox/Codex",

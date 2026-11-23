@@ -80,3 +80,20 @@ stopping after proposing a plan or making the first change.
 User instructions take precedence over these defaults. Follow relevant local
 instructions and skills, but don't let generic process guidance replace
 judgment about the current task.
+
+## Session Context
+
+At session start, if `.codex/session-config.json` exists, read it and the
+configured session initializer, code-style note, and meaningful-work note when
+present. Apply the style note to relevant code and keep its guidance subordinate
+to system and user instructions. `AGENTS.md` is loaded at startup, so this is the
+project's automatic bootstrap; installing a standalone prompt or skill alone is
+not.
+
+At task completion, evaluate the configured meaningful-work criteria. When
+they are met and `.codex/session-config.json` enables Obsidian, draft an article
+with `codex-obsidian-bridge draft` using observed changes, decisions, and checks.
+Do not invent verification or claim a draft was written unless the command
+confirms it. If the binary is unavailable, use the package via `npm exec` only
+when the configured workflow is enabled; otherwise report that the bridge is
+unavailable. Skip the article for small work or when Obsidian is disabled.

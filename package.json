@@ -27,6 +27,7 @@
     "bin/",
     "docs/codex-plugin-distribution.md",
     "docs/npm-publishing.md",
+    "evals/",
     "lib/",
     "AGENTS.md",
     "configs/",

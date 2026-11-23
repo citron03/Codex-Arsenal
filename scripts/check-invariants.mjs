@@ -136,11 +136,30 @@ export async function checkSkillNamesMatchDirectories(root) {
     }
 
     checked += 1;
-    const declared = contents.match(/^name:\s*(.+?)\s*$/m);
+    const frontmatter = contents.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
+    if (!frontmatter) {
+      failures.push(`skills/${entry.name}/SKILL.md has no valid YAML frontmatter block`);
+      continue;
+    }
+
+    const metadata = frontmatter[1];
+    const declared = metadata.match(/^name:\s*(.+?)\s*$/m);
     if (!declared) {
       failures.push(`skills/${entry.name}/SKILL.md has no "name:" in its frontmatter`);
-    } else if (declared[1] !== entry.name) {
-      failures.push(`skills/${entry.name}/SKILL.md declares name "${declared[1]}"`);
+    } else {
+      if (declared[1] !== entry.name) {
+        failures.push(`skills/${entry.name}/SKILL.md declares name "${declared[1]}"`);
+      }
+      if (declared[1].length > 64 || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(declared[1])) {
+        failures.push(`skills/${entry.name}/SKILL.md name must be 1-64 lowercase letters, numbers, or single hyphens`);
+      }
+    }
+
+    const description = metadata.match(/^description:\s*(.*?)\s*$/m);
+    if (!description || !description[1]) {
+      failures.push(`skills/${entry.name}/SKILL.md has no non-empty "description:" in its frontmatter`);
+    } else if (description[1].length > 1024) {
+      failures.push(`skills/${entry.name}/SKILL.md description exceeds 1024 characters`);
     }
   }
 
@@ -232,7 +251,7 @@ export function repositoryChecks(root = REPO_ROOT, manifest = MANIFEST, columnWi
   return [
     ["README tables match the manifest", () => checkReadmeMatchesManifest(root, manifest)],
     ["manifest ids fit the list column", () => checkIdsFitTheListColumn(manifest, columnWidth)],
-    ["skill names match their directories", () => checkSkillNamesMatchDirectories(root)],
+    ["skill metadata matches Agent Skills requirements", () => checkSkillNamesMatchDirectories(root)],
     ["relative links resolve", () => checkRelativeLinksResolve(root)],
     ["release tables agree", () => checkReleaseTablesAgree(root)]
   ];

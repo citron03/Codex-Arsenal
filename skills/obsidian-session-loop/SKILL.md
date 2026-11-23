@@ -11,7 +11,7 @@ Use this skill when a project keeps session guidance in `AGENTS.md`, stores sess
 
 ## When To Use
 
-- When explicitly invoked at session start; installing a skill does not run it automatically.
+- When a project `AGENTS.md` or the user explicitly asks to run this session workflow.
 - When the project wants a code-style note to influence the current session.
 - When the work should produce a session article in Obsidian.
 - When the task touches the session bootstrap, Obsidian bridge, or the meaningful-work criteria.

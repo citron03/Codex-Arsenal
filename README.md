@@ -33,6 +33,17 @@ npx codex-arsenal get option-obsidian-session-loop
 npx codex-arsenal get option-github-issue-harness
 ```
 
+For automatic session-note loading in a new project, install both the base
+instructions and the Obsidian add-on:
+
+```bash
+npx codex-arsenal get agents-md option-obsidian-session-loop
+```
+
+If the project already has an `AGENTS.md`, the installer preserves it. Merge
+the `Session Context` section from Codex-Arsenal's `AGENTS.md` to enable the
+same startup and end-of-task behavior.
+
 Install into another directory:
 
 ```bash
@@ -83,7 +94,7 @@ into a prompt. The previous id `codex-md` still resolves to this item.
 
 | ID | Installs | Purpose |
 | --- | --- | --- |
-| `config-codex` | `.codex/config.toml` | GPT-6 Astra starter config with medium reasoning, on-request approvals, and workspace-write sandbox. |
+| `config-codex` | `.codex/config.toml` | GPT-6.2 Sol starter config with medium reasoning, on-request approvals, and workspace-write sandbox. |
 | `config-session-bootstrap` | `.codex/session-config.json` | Session bootstrap and Obsidian bridge settings. |
 | `config-vscode` | `.vscode/settings.json` | VS Code settings for agent-assisted development. |
 
@@ -95,7 +106,7 @@ These are opt-in: `init --yes` installs only the default `agents-md` guidance. S
 | --- | --- | --- |
 | `option-plan-counterargument` | `.agents/skills/plan-counterargument/SKILL.md` | Challenge a proposed plan and revise it when the evidence falsifies it. |
 | `option-token-efficient-execution` | `.agents/skills/token-efficient-execution/SKILL.md` | Conserve context and tool-output budget without skipping verification. |
-| `option-obsidian-session-loop` | Obsidian config, prompts, skill, and bridge sketch | Add session-note sync and meaningful-work article drafting in Obsidian. |
+| `option-obsidian-session-loop` | Obsidian config, prompts, skill, and bridge | Add session-note sync and meaningful-work article drafting in Obsidian. |
 | `option-github-issue-harness` | `.codex/github-harness.json`, `.agents/skills/github-issue-harness/SKILL.md` | Triage GitHub issues and enable selected issue updates using GitHub CLI authentication. |
 
 ### GitHub Issue Harness
@@ -182,7 +193,15 @@ an evidence-backed record that can inform the end-of-session Obsidian article.
 Short tasks should skip the log; it is not a transcript or a replacement for
 verification.
 
-The default config lives in `.codex/session-config.json` and can be customized per project. A minimal vault layout looks like this:
+The project `AGENTS.md` automatically points Codex to
+`.codex/session-config.json` and its configured notes at startup. This uses
+Codex's normal instruction loading, not a lifecycle hook; user and system
+instructions still take precedence. At task completion, Codex evaluates the
+meaningful-work criteria and drafts an article only when they pass and Obsidian
+is enabled. This is an instruction-following workflow, not a guaranteed
+background job; the final report should say if drafting was skipped or failed.
+The config can be customized per project. A minimal vault layout looks like
+this:
 
 ```text
 Codex/
@@ -202,12 +221,30 @@ codex-obsidian-bridge reveal --dir . --file "Inbox/Codex/2026-06-11-refined-sess
 codex-obsidian-bridge draft --dir . --title "Refined session bootstrap" --summary "Added an Obsidian bridge and session-level startup guidance." --changes "added bridge CLI, added note templates" --decisions "kept config file-based" --verification "npm test" --signals "new integration boundary, README update"
 ```
 
+If the bridge binary is not installed globally or in the project, run it
+one-off with:
+
+```bash
+npm exec --yes --package=codex-arsenal@latest \
+  --call="codex-obsidian-bridge --help"
+```
+
 `.codex/session-config.json` is executable input: `obsidian.launch` names a
 command the bridge runs, and the note and inbox paths decide where it writes.
 Writes are confined to the vault and refuse to follow symbolic links, but the
 command is not sandboxed — run the bridge only against a config you trust.
 
-If you have an Obsidian CLI or local launcher, add `obsidian.launch.open` and `obsidian.launch.reveal` templates to `.codex/session-config.json`. The bridge will use those templates first and fall back to an `obsidian://` launch URI if no CLI template is configured.
+The official Obsidian CLI is bundled with the Obsidian installer. Update to the
+current installer, enable **Settings → General → Command line interface**, follow
+the registration prompt, restart your terminal, and verify with `obsidian help`.
+Do not install the unrelated npm package named `obsidian-cli`. If the CLI is
+available, the bridge uses configured `obsidian.launch.open` and
+`obsidian.launch.reveal` templates; otherwise it falls back to an
+`obsidian://` URI. Markdown sync and article drafts use the configured vault
+paths directly, so verify `.codex/session-config.json` before enabling writes.
+Before use, set `obsidian.vaultPath` to an existing vault and then change
+`obsidian.enabled` to `true`. The bridge refuses to create a missing vault
+directory, preventing a typo from silently creating a second, empty vault.
 
 ### Workflows
 
@@ -225,6 +262,7 @@ codex-arsenal/
   plugins/              plugin sketches
   prompts/              system prompt templates and session notes
   skills/               reusable agent skills
+  evals/                skill activation prompt sets
   workflows/            repeatable agentic workflows
   references/           curated references and notes
   examples/             before/after examples
@@ -243,20 +281,23 @@ dependencies — and what each of those choices cost. Read it before proposing a
 structural change. A Korean translation is at
 [`docs/ko/design-principles.md`](docs/ko/design-principles.md).
 
-The starter `.codex/config.toml` uses GPT-6 Astra with medium reasoning,
-on-request approvals, and a workspace-write sandbox. Change the model or
-reasoning effort to match your account and workload; installed skills remain
-model-agnostic and opt-in. Codex reads project configuration only for trusted
-projects. The Obsidian session initializer is guidance, not a session-start
-hook: reference it from `AGENTS.md` or invoke `obsidian-session-loop` when you
-want that workflow to run.
+The starter `.codex/config.toml` uses GPT-6.2 Sol with medium reasoning,
+on-request approvals, and a workspace-write sandbox. OpenAI recommends Sol as
+the starting point for most Codex work and Astra for more complex projects;
+availability varies by account. Change the model or reasoning effort to fit
+your workload. Codex reads project configuration only for trusted projects.
+Skills remain opt-in, with concise descriptions for discovery and detailed
+workflow instructions loaded only when relevant.
 
-These instructions are tuned to current Codex behavior: keep skill descriptions
-specific and concise, load detailed procedures only when relevant, avoid
-repeating routine checks, and state the completion goal when follow-through
-matters. See OpenAI's [GPT-6 prompting guidance](https://developers.openai.com/api/docs/guides/latest-model#prompting-best-practices)
-and [Codex configuration reference](https://developers.openai.com/codex/config-reference)
-for current details.
+These defaults follow current Codex guidance: keep project instructions focused,
+write skills around clear user goals, progressively load supporting material,
+and evaluate skill activation with positive and negative examples. See OpenAI's
+[model selection guide](https://developers.openai.com/api/docs/guides/model-selection),
+[Codex skills guide](https://learn.chatgpt.com/docs/build-skills),
+[Codex hooks guide](https://learn.chatgpt.com/docs/hooks), and
+[configuration reference](https://developers.openai.com/codex/config-reference),
+the [Agent Skills specification](https://agentskills.io/specification), and
+[Obsidian CLI guide](https://obsidian.md/help/cli).
 
 ## Development
 
@@ -284,10 +325,14 @@ on every pull request and writes the answer into the job summary.
 
 This enforces the consistency rules the documentation asserts: the README item
 tables match `lib/manifest.js` in content and order, every manifest id fits the
-column `codex-arsenal list` pads to, each skill's frontmatter `name` matches its
-directory, every relative link in the Markdown resolves, and the commit-type
-table states the same rules everywhere it appears. CI runs it on pull requests
-and again before publishing.
+column `codex-arsenal list` pads to, each skill's required frontmatter fields
+meet the Agent Skills name and description constraints, every relative link in
+the Markdown resolves, and the commit-type table states the same rules
+everywhere it appears. CI runs it on pull requests and again before publishing.
+
+The `evals/` directory holds small positive and negative prompt sets for skill
+activation. They are evaluation fixtures, not a claim that model behavior is
+automatically tested in CI.
 
 Preview the npm package contents:
 
@@ -339,16 +384,13 @@ See `DEPLOYMENT_GUIDE.md` and `docs/npm-publishing.md` for the full release and 
 
 ## Codex Plugin Distribution
 
-The npm package is the current public distribution channel. Codex plugin library publishing is separate from npm and currently does not expose a general public submission flow in the public docs.
-
-For now, use one of these paths:
-
-- publish reusable files through `codex-arsenal` on npm;
-- keep plugin sketches under `plugins/`;
-- create a local or team marketplace file at `.agents/plugins/marketplace.json` when you want Codex app users to install a repo plugin from a local marketplace;
-- track OpenAI's Codex plugin documentation for an official public marketplace submission path.
-
-See `docs/codex-plugin-distribution.md` for the current assessment.
+The npm package remains the distribution channel for this installable file
+arsenal. Codex plugins are a separate package format: current plugins can bundle
+skills, MCP servers, and optional UI; lifecycle hooks are supported for manually
+installed Codex desktop plugins, but plugins with hooks are not eligible for the
+public plugin directory. The entries under `plugins/` are still sketches, not
+installable plugins. See [`docs/codex-plugin-distribution.md`](docs/codex-plugin-distribution.md)
+before turning one into a plugin.
 
 ## Contribution Guidelines
 

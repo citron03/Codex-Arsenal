@@ -250,4 +250,28 @@ describe("obsidian bridge containment", () => {
       await rm(root, { recursive: true, force: true });
     }
   });
+
+  it("refuses to create a missing configured vault directory", async () => {
+    const root = await vault();
+    const missingVault = join(root, "not-a-vault");
+    try {
+      await assert.rejects(
+        syncObsidianNotes({ cwd: join(root, "proj"), config: config(root, { vaultPath: missingVault }) }),
+        /Configured Obsidian vault does not exist/
+      );
+      await assert.rejects(
+        draftObsidianArticle({
+          cwd: join(root, "proj"),
+          config: config(root, { vaultPath: missingVault }),
+          title: "No Vault",
+          summary: "Must not create a directory.",
+          integrationBoundary: true
+        }),
+        /Configured Obsidian vault does not exist/
+      );
+      await assert.rejects(readFile(missingVault, "utf8"), { code: "ENOENT" });
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
 });
