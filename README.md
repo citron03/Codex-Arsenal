@@ -144,6 +144,7 @@ The harness uses `gh` so tokens stay outside the repository. `.codex/github-harn
 | `skill-change-impact-analysis` | `.agents/skills/change-impact-analysis/SKILL.md` | Trace consequential changes across consumers and verify critical safety assumptions. |
 | `skill-decision-trail` | `.agents/skills/decision-trail/SKILL.md` | Keep a concise evidence-backed decision log for long-running or handoff-heavy work. |
 | `skill-anti-ai-slop` | `.agents/skills/anti-ai-slop/SKILL.md` | Review and improve low-value, repetitive, unsupported, or generic output without flattening its voice. |
+| `skill-orchestrator` | `.agents/skills/skill-orchestrator/SKILL.md` | Analyze multi-step requests, compose relevant skills into a plan, execute, and verify. |
 
 These skills are opt-in and solve different problems:
 
@@ -161,7 +162,7 @@ These skills are opt-in and solve different problems:
 Install only the skills you want:
 
 ```bash
-npx codex-arsenal get skill-create-verification-skill skill-change-impact-analysis skill-decision-trail skill-anti-ai-slop
+npx codex-arsenal get skill-create-verification-skill skill-change-impact-analysis skill-decision-trail skill-anti-ai-slop skill-orchestrator
 ```
 
 Skills install to `.agents/skills/<name>/SKILL.md`. Codex scans `.agents/skills`

@@ -159,6 +159,15 @@ describe("manifest", () => {
     ]);
   });
 
+  it("installs the skill orchestrator into Codex's skill directory", () => {
+    const item = MANIFEST.find((entry) => entry.id === "skill-orchestrator");
+
+    assert.equal(item.category, "Skills");
+    assert.deepEqual(item.files, [
+      { src: "skills/skill-orchestrator/SKILL.md", dest: ".agents/skills/skill-orchestrator/SKILL.md" }
+    ]);
+  });
+
   // Codex scans `.agents/skills` and never a plain `skills/` directory, so a
   // skill installed anywhere else is inert however well formed it is. The
   // repository keeps its readable `skills/` layout as the source.

@@ -1,0 +1,6 @@
+id,should_trigger,prompt
+multi_workstream,true,"Upgrade this service to support team accounts: inspect the codebase, plan the API, migration, and UI work, implement it, run tests, and review risks before summarizing."
+skill_composition,true,"Research current platform requirements, update our plugin configuration, verify it, and prepare a release if all checks pass. Choose the relevant skills rather than loading everything."
+explicit_orchestration,true,"Use the available skill set to analyze this multi-part request, pick the best workflow, carry it through, and verify the finished result."
+simple_typo,false,"Fix the typo in this one heading and make no other changes."
+simple_question,false,"What does this function return? Explain it without changing any files."
