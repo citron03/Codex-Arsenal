@@ -1,0 +1,5 @@
+id,should_trigger,prompt
+direct_review,true,"Review this AI-assisted launch announcement for generic claims, repeated ideas, unsupported details, and reader value; revise only problems you can substantiate."
+code_review,true,"Audit this generated pull request for unnecessary scope, unverified assumptions, and reviewer burden. Don't judge authorship from style."
+preserve_voice,true,"Tighten this personal essay where it is repetitive, but preserve my voice and don't invent anecdotes or try to make it sound more human."
+ordinary_edit,false,"Fix the spelling mistake in this sentence only; do not run a broader quality review."

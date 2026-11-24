@@ -146,6 +146,19 @@ describe("manifest", () => {
     }
   });
 
+  it("installs the anti-AI-slop skill and its research guide", () => {
+    const item = MANIFEST.find((entry) => entry.id === "skill-anti-ai-slop");
+
+    assert.equal(item.category, "Skills");
+    assert.deepEqual(item.files, [
+      { src: "skills/anti-ai-slop/SKILL.md", dest: ".agents/skills/anti-ai-slop/SKILL.md" },
+      {
+        src: "skills/anti-ai-slop/references/quality-signals.md",
+        dest: ".agents/skills/anti-ai-slop/references/quality-signals.md"
+      }
+    ]);
+  });
+
   // Codex scans `.agents/skills` and never a plain `skills/` directory, so a
   // skill installed anywhere else is inert however well formed it is. The
   // repository keeps its readable `skills/` layout as the source.
